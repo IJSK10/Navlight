@@ -1,255 +1,115 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:convert';
+// import 'package:latlong2/latlong.dart';
 
-void initializeApp() {
-  WidgetsFlutterBinding.ensureInitialized();
-}
-
-class Maphome extends StatefulWidget {
-  const Maphome({super.key});
-
+class GeoJsonMapScreen extends StatefulWidget {
   @override
-  State<Maphome> createState() => _MaphomeState();
+  _GeoJsonMapScreenState createState() => _GeoJsonMapScreenState();
 }
 
-class _MaphomeState extends State<Maphome> {
-  GoogleMapController? mapController;
-  static const LatLng _initialPosition = LatLng(40.9136, -73.1257);
-  final Set<Polygon> _polygons = {};
-  final Set<Marker> _markers = {};
-
-  bool _isLoading = true;
-  String? _error;
+class _GeoJsonMapScreenState extends State<GeoJsonMapScreen> {
+  late GoogleMapController mapController;
+  Set<Marker> _markers = Set();
+  Set<Polygon> _polygons = Set();
+  late Future<Map<String, dynamic>> geoJsonData;
 
   @override
   void initState() {
     super.initState();
-    _loadGeoJson();
+    geoJsonData = loadGeoJson();
   }
 
-  Future<void> _loadGeoJson() async {
-    try {
-      setState(() {
-        _isLoading = true;
-        _error = null;
-      });
-
-      // Load the GeoJSON file from assets
-      final String geoJsonString =
-          await rootBundle.loadString('assets/floor.geojson');
-      await _parseGeoJson(geoJsonString);
-
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading GeoJSON: $e');
-      setState(() {
-        _isLoading = false;
-        _error = 'Failed to load floor plan data. Please try again.';
-      });
-    }
+  // Load GeoJSON from assets
+  Future<Map<String, dynamic>> loadGeoJson() async {
+    String geoJsonString = await rootBundle.loadString('assets/floor.geojson');
+    return jsonDecode(geoJsonString);
   }
 
-  Future<void> _parseGeoJson(String geoJsonString) async {
-    try {
-      final mapData = json.decode(geoJsonString);
-      for (var feature in mapData['features']) {
-        final properties = feature['properties'];
-        final geometry = feature['geometry'];
+  // Process GeoJSON data and extract coordinates
+  void processGeoJson(Map<String, dynamic> geoJsonData) {
+    int polygonId = 0;
+    int markerId = 0;
 
-        if (geometry['type'] == 'MultiPolygon') {
-          // Add each polygon to the map
-          final polygonId = PolygonId(properties['name']);
-          final List<LatLng> polygonPoints = [];
-
-          // Extracting coordinates for polygons
-          for (var coords in geometry['coordinates'][0]) {
-            polygonPoints.add(LatLng(coords[1], coords[0]));
+    for (var feature in geoJsonData['features']) {
+      var geometry = feature['geometry'];
+      if (geometry['type'] == 'MultiPolygon') {
+        var coordinates = geometry['coordinates'];
+        for (var polygon in coordinates) {
+          List<LatLng> polygonCoordinates = [];
+          for (var ring in polygon) {
+            for (var coordinate in ring) {
+              double longitude = double.parse(coordinate[0].toString());
+              double latitude = double.parse(coordinate[1].toString());
+              polygonCoordinates.add(LatLng(latitude, longitude));
+            }
           }
 
+          // Add the polygon to the set
           _polygons.add(
             Polygon(
-              polygonId: polygonId,
-              points: polygonPoints,
-              strokeWidth: 2,
-              strokeColor:
-                  properties['type'] == 'hallway' ? Colors.grey : Colors.blue,
-              fillColor: properties['type'] == 'hallway'
-                  ? Colors.grey.withOpacity(0.3)
-                  : Colors.blue.withOpacity(0.3),
+              polygonId: PolygonId('polygon_$polygonId'),
+              points: polygonCoordinates,
+              strokeColor: Colors.blue,
+              strokeWidth: 3,
+              fillColor: Colors.blue.withOpacity(0.2),
             ),
           );
-        } else if (geometry['type'] == 'Point') {
-          // Add markers for points
-          final coordinates = geometry['coordinates'];
-          _markers.add(
-            Marker(
-              markerId: MarkerId(properties['name']),
-              position: LatLng(coordinates[1], coordinates[0]),
-              infoWindow: InfoWindow(title: properties['name']),
-            ),
-          );
+          polygonId++;
         }
-      }
+      } else if (geometry['type'] == 'Point') {
+        var coordinates = geometry['coordinates'];
+        double longitude = double.parse(coordinates[0].toString());
+        double latitude = double.parse(coordinates[1].toString());
 
-      setState(() {});
-    } catch (e) {
-      print('Error parsing GeoJSON: $e');
-      setState(() {
-        _error =
-            'Failed to parse floor plan data. Please check the file format.';
-      });
+        // Add the marker for the point
+        _markers.add(
+          Marker(
+            markerId: MarkerId('marker_$markerId'),
+            position: LatLng(latitude, longitude),
+            infoWindow: InfoWindow(title: 'Point $markerId'),
+          ),
+        );
+        markerId++;
+      }
     }
   }
-
-  // void _showRoomInfo(String name, int id, String type) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) => Container(
-  //       padding: const EdgeInsets.all(16),
-  //       child: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text('Room: $name', style: Theme.of(context).textTheme.titleLarge),
-  //           const SizedBox(height: 8),
-  //           Text('ID: $id'),
-  //           Text('Type: $type'),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   // final CameraPosition initialPosition = CameraPosition(
-  //   //   target: LatLng(40.913513, -73.125500),
-  //   //   zoom: 21,
-  //   // );
-
-  //   return MaterialApp(
-  //     home: Scaffold(
-  //       appBar: AppBar(
-  //         title: const Text('Floor Plan Map'),
-  //         actions: [
-  //           IconButton(
-  //             icon: const Icon(Icons.refresh),
-  //             onPressed: _loadGeoJson,
-  //           ),
-  //           IconButton(
-  //             icon: const Icon(Icons.info_outline),
-  //             onPressed: () {
-  //               showDialog(
-  //                 context: context,
-  //                 builder: (context) => AlertDialog(
-  //                   title: const Text('Map Legend'),
-  //                   content: Column(
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       Row(
-  //                         children: [
-  //                           Container(
-  //                             width: 20,
-  //                             height: 20,
-  //                             color: Colors.blue.withOpacity(0.3),
-  //                           ),
-  //                           const SizedBox(width: 8),
-  //                           const Text('Cabin'),
-  //                         ],
-  //                       ),
-  //                       const SizedBox(height: 8),
-  //                       Row(
-  //                         children: [
-  //                           Container(
-  //                             width: 20,
-  //                             height: 20,
-  //                             color: Colors.grey.withOpacity(0.2),
-  //                           ),
-  //                           const SizedBox(width: 8),
-  //                           const Text('Hallway'),
-  //                         ],
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   actions: [
-  //                     TextButton(
-  //                       onPressed: () => Navigator.pop(context),
-  //                       child: const Text('Close'),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  //           ),
-  //         ],
-  //       ),
-  //       body: _isLoading
-  //           ? const Center(child: CircularProgressIndicator())
-  //           : _error != null
-  //               ? Center(
-  //                   child: Column(
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: [
-  //                       Text(_error!,
-  //                           style: const TextStyle(color: Colors.red)),
-  //                       const SizedBox(height: 16),
-  //                       ElevatedButton(
-  //                         onPressed: _loadGeoJson,
-  //                         child: const Text('Retry'),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 )
-  //               : GoogleMap(
-  //                   initialCameraPosition: initialPosition,
-  //                   mapType: MapType.satellite,
-  //                   polygons: _polygons,
-  //                   markers: _markers,
-  //                   buildingsEnabled: false,
-  //                   mapToolbarEnabled: false,
-  //                   zoomControlsEnabled: false,
-  //                   minMaxZoomPreference: const MinMaxZoomPreference(19, 22),
-  //                   onMapCreated: (GoogleMapController controller) {
-  //                     mapController = controller;
-  //                     controller.setMapStyle('''
-  //                       [
-  //                         {
-  //                           "featureType": "poi",
-  //                           "stylers": [{ "visibility": "off" }]
-  //                         },
-  //                         {
-  //                           "featureType": "transit",
-  //                           "stylers": [{ "visibility": "off" }]
-  //                         }
-  //                       ]
-  //                     ''');
-  //                   },
-  //                 ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Indoor Map"),
+        title: Text('GeoJSON with Google Maps'),
       ),
-      body: GoogleMap(
-        onMapCreated: (GoogleMapController controller) {
-          mapController = controller;
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: geoJsonData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            // Process the GeoJSON data and extract coordinates
+            processGeoJson(snapshot.data!);
+
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(37.7749, -122.4194), // Default to San Francisco
+                zoom: 10.0,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                mapController = controller;
+              },
+              markers: _markers,
+              polygons: _polygons,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+            );
+          } else {
+            return Center(child: Text('No data available.'));
+          }
         },
-        initialCameraPosition: const CameraPosition(
-          target: _initialPosition,
-          zoom: 20,
-        ),
-        polygons: _polygons,
-        markers: _markers,
       ),
     );
   }
