@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:latlong2/latlong.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:dio/dio.dart';
 
 class GeoJsonMapScreen extends StatefulWidget {
   @override
@@ -11,105 +11,199 @@ class GeoJsonMapScreen extends StatefulWidget {
 
 class _GeoJsonMapScreenState extends State<GeoJsonMapScreen> {
   late GoogleMapController mapController;
-  Set<Marker> _markers = Set();
-  Set<Polygon> _polygons = Set();
-  late Future<Map<String, dynamic>> geoJsonData;
+  LatLng? _currentLocation;
+  LatLng? _startPoint;
+  LatLng? _endPoint;
+  final TextEditingController _destinationController = TextEditingController();
+  final TextEditingController _originController = TextEditingController();
+  List<dynamic> _autocompleteResults = [];
+  bool _isOriginSearch = false;
+  final String _googleApiKey =
+      'YOUR_GOOGLE_API_KEY'; // Replace with your API key
 
   @override
   void initState() {
     super.initState();
-    geoJsonData = loadGeoJson();
+    _getCurrentLocation();
   }
 
-  // Load GeoJSON from assets
-  Future<Map<String, dynamic>> loadGeoJson() async {
-    String geoJsonString = await rootBundle.loadString('assets/floor.geojson');
-    return jsonDecode(geoJsonString);
+  // Get the user's current location
+  Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) return;
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+      _startPoint = _currentLocation; // Default starting location
+    });
   }
 
-  // Process GeoJSON data and extract coordinates
-  void processGeoJson(Map<String, dynamic> geoJsonData) {
-    int polygonId = 0;
-    int markerId = 0;
-
-    for (var feature in geoJsonData['features']) {
-      var geometry = feature['geometry'];
-      if (geometry['type'] == 'MultiPolygon') {
-        var coordinates = geometry['coordinates'];
-        for (var polygon in coordinates) {
-          List<LatLng> polygonCoordinates = [];
-          for (var ring in polygon) {
-            for (var coordinate in ring) {
-              double longitude = double.parse(coordinate[0].toString());
-              double latitude = double.parse(coordinate[1].toString());
-              polygonCoordinates.add(LatLng(latitude, longitude));
-            }
-          }
-
-          // Add the polygon to the set
-          _polygons.add(
-            Polygon(
-              polygonId: PolygonId('polygon_$polygonId'),
-              points: polygonCoordinates,
-              strokeColor: Colors.blue,
-              strokeWidth: 3,
-              fillColor: Colors.blue.withOpacity(0.2),
-            ),
-          );
-          polygonId++;
-        }
-      } else if (geometry['type'] == 'Point') {
-        var coordinates = geometry['coordinates'];
-        double longitude = double.parse(coordinates[0].toString());
-        double latitude = double.parse(coordinates[1].toString());
-
-        // Add the marker for the point
-        _markers.add(
-          Marker(
-            markerId: MarkerId('marker_$markerId'),
-            position: LatLng(latitude, longitude),
-            infoWindow: InfoWindow(title: 'Point $markerId'),
-          ),
-        );
-        markerId++;
-      }
+  // Fetch autocomplete suggestions
+  Future<void> _fetchAutocompleteSuggestions(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        _autocompleteResults = [];
+      });
+      return;
     }
+
+    final url =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=$_googleApiKey';
+
+    try {
+      final response = await Dio().get(url);
+      setState(() {
+        _autocompleteResults = response.data['predictions'];
+      });
+    } catch (e) {
+      print('Error fetching autocomplete results: $e');
+    }
+  }
+
+  // Move the camera to the selected location
+  void _moveCamera(LatLng location) {
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(target: location, zoom: 16),
+    ));
+  }
+
+  // Handle destination selection
+  void _selectDestination(String placeId) async {
+    final url =
+        'https://maps.googleapis.com/maps/api/geocode/json?place_id=$placeId&key=$_googleApiKey';
+
+    try {
+      final response = await Dio().get(url);
+      final location = response.data['results'][0]['geometry']['location'];
+      LatLng destination = LatLng(location['lat'], location['lng']);
+
+      setState(() {
+        _endPoint = destination;
+        _destinationController.text =
+            response.data['results'][0]['formatted_address'];
+        _autocompleteResults = [];
+      });
+
+      _moveCamera(destination);
+      _showDirectionsModal(); // Show "Get Directions" modal
+    } catch (e) {
+      print('Error fetching place details: $e');
+    }
+  }
+
+  // Show the directions modal
+  void _showDirectionsModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text('Destination: ${_destinationController.text}'),
+              subtitle: _startPoint == null
+                  ? const Text('Start: Not Set')
+                  : Text('Start: $_startPoint'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_startPoint == null) {
+                  // Prompt to select origin if not set
+                  setState(() {
+                    _isOriginSearch = true;
+                  });
+                  Navigator.pop(context);
+                } else {
+                  // Proceed to show directions
+                  print('Starting at: $_startPoint, Heading to: $_endPoint');
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Get Directions'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('GeoJSON with Google Maps'),
+        title: const Text('GeoJSON Map with Directions'),
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: geoJsonData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            // Process the GeoJSON data and extract coordinates
-            processGeoJson(snapshot.data!);
-
-            return GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(37.7749, -122.4194), // Default to San Francisco
-                zoom: 10.0,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-              },
-              markers: _markers,
-              polygons: _polygons,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-            );
-          } else {
-            return Center(child: Text('No data available.'));
-          }
-        },
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target:
+                  _currentLocation ?? LatLng(0, 0), // Default if no location
+              zoom: 14,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              mapController = controller;
+            },
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+          ),
+          Positioned(
+            top: 10,
+            left: 10,
+            right: 10,
+            child: Column(
+              children: [
+                // Destination Search Field
+                TextField(
+                  controller: _destinationController,
+                  decoration: InputDecoration(
+                    hintText: 'Search Destination',
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onChanged: _fetchAutocompleteSuggestions,
+                ),
+                if (_isOriginSearch)
+                  // Origin Search Field (Appears when required)
+                  TextField(
+                    controller: _originController,
+                    decoration: InputDecoration(
+                      hintText: 'Search Origin',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onChanged: _fetchAutocompleteSuggestions,
+                  ),
+                // Autocomplete Suggestions
+                if (_autocompleteResults.isNotEmpty)
+                  Container(
+                    color: Colors.white,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _autocompleteResults.length,
+                      itemBuilder: (context, index) {
+                        final suggestion = _autocompleteResults[index];
+                        return ListTile(
+                          title: Text(suggestion['description']),
+                          onTap: () =>
+                              _selectDestination(suggestion['place_id']),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
