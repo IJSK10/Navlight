@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,11 +10,10 @@ import '../../services/location_service.dart';
 import '../../services/places_service.dart';
 import '../../services/directions_service.dart';
 import '../widgets/search_bar_widget.dart';
-//import '../widgets/route_info_widget.dart';
 import '../widgets/place_details_sheet.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:navlight/services/navigation_service.dart';
-
+import 'package:navlight/services/location_orientation_service.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -35,6 +35,7 @@ class _MapScreenState extends State<HomeScreen1> {
   List<dynamic> suggestions = [];
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
+  Set<Polygon> polygons = {};
 
   LatLng? destinationLocation;
   LatLng? currentLocation;
@@ -63,12 +64,117 @@ class _MapScreenState extends State<HomeScreen1> {
   double _smoothedHeading = 0.0;
   double _lastHeading = 0.0;
   DateTime _lastUpdateTime = DateTime.now();
+  final LocationOrientationService _locationOrientationService =
+      LocationOrientationService();
+  StreamSubscription? _locationOrientationSubscription;
+  LatLng? _lastReportedLocation;
+  double _lastReportedHeading = 0.0;
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
     _initCompassListener();
+    _initLocationOrientationTracking();
+    _loadGeoJson();
+  }
+
+  Future<void> _loadGeoJson() async {
+    try {
+      final String geoJsonString = await DefaultAssetBundle.of(context)
+          .loadString('assets/pathway.geojson');
+      final geoJson = jsonDecode(geoJsonString);
+
+      final features = geoJson['features'] as List;
+      print((features.length));
+
+      for (var feature in features) {
+        if (feature['geometry']['type'] == 'MultiPolygon') {
+          final coordinates = feature['geometry']['coordinates'] as List;
+          final properties = feature['properties'];
+
+          for (var polygon in coordinates) {
+            final List<LatLng> polygonCoords = [];
+
+            for (var point in polygon[0]) {
+              polygonCoords.add(LatLng(point[1], point[0]));
+            }
+
+            final newPolygon = Polygon(
+                polygonId: PolygonId(properties['id'].toString()),
+                points: polygonCoords,
+                fillColor: Colors.blue.withOpacity(0.2),
+                strokeColor: Colors.blue,
+                strokeWidth: 2,
+                consumeTapEvents: true,
+                onTap: () {
+                  print('Tapped polygon: ${properties['name']}');
+                });
+
+            setState(() {
+              polygons.add(newPolygon);
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error loading GeoJSON: $e');
+    }
+  }
+
+  void _initLocationOrientationTracking() {
+    _locationOrientationSubscription =
+        _locationOrientationService.locationOrientationStream.listen(
+      (locationData) {
+        // Compare and validate location
+        _validateAndUpdateLocation(locationData);
+      },
+      onError: (error) {
+        print('Location Orientation Error: $error');
+      },
+    );
+  }
+
+  void _validateAndUpdateLocation(LocationOrientationData locationData) {
+    final newLocation = LatLng(locationData.latitude, locationData.longitude);
+
+    // Check if location has changed significantly
+    bool locationChanged = _lastReportedLocation == null ||
+        Geolocator.distanceBetween(
+                _lastReportedLocation!.latitude,
+                _lastReportedLocation!.longitude,
+                newLocation.latitude,
+                newLocation.longitude) >
+            10; // More than 10 meters
+
+    // Check if heading has changed significantly
+    bool headingChanged = (_lastReportedHeading - locationData.heading).abs() >
+        5; // More than 5 degrees
+
+    if (locationChanged || headingChanged) {
+      setState(() {
+        currentLocation = newLocation;
+        _lastReportedLocation = newLocation;
+        _lastReportedHeading = locationData.heading;
+
+        // Update markers and camera
+        _updateCurrentLocationMarker();
+        _updateMapCamera(newLocation, locationData.heading);
+      });
+    }
+  }
+
+  void _updateMapCamera(LatLng location, double heading) {
+    mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: location,
+          bearing: heading,
+          tilt: 45.0,
+          zoom: 17.0,
+        ),
+      ),
+    );
   }
 
   void _initCompassListener() {
@@ -115,49 +221,23 @@ class _MapScreenState extends State<HomeScreen1> {
   }
 
   Future<void> _getCurrentLocation() async {
-    final result = await _locationService.getCurrentLocation();
-    setState(() {
-      if (result.error != null) {
-        locationError = result.error!;
-        isLoadingLocation = false;
-      } else if (result.location != null) {
-        currentLocation = result.location;
-        isLoadingLocation = false;
-        locationError = '';
-        _updateCurrentLocationMarker();
-      }
-    });
+    bool hasPermission =
+        await _locationOrientationService.checkLocationPermissions();
 
-    if (currentLocation != null && mapController != null) {
-      await mapController!.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: currentLocation!, zoom: 15),
-        ),
-      );
+    if (!hasPermission) {
+      setState(() {
+        locationError = 'Location permissions are required';
+        isLoadingLocation = false;
+      });
+      return;
     }
+
+    // The location will be updated through the stream listener
+    setState(() {
+      isLoadingLocation = false;
+      locationError = '';
+    });
   }
-
-  // void _startNavigation() {
-  //   if (selectedRouteMode == null || routeOptions.isEmpty) return;
-
-  //   final selectedRoute = routeOptions[selectedRouteMode];
-
-  //   setState(() {
-  //     isNavigating = true;
-  //     // Here you would typically start tracking the user's location
-  //     // and updating navigation instructions
-  //     // For now, we'll use a placeholder
-  //     currentNavigationInstruction = 'Head northeast on Main St';
-  //     remainingDistance = selectedRoute.distance;
-  //     remainingDuration = selectedRoute.duration;
-  //   });
-
-  //   // In a real implementation, you'd:
-  //   // 1. Start location tracking
-  //   // 2. Compare current location with route waypoints
-  //   // 3. Update instructions based on proximity to next turn
-  //   // 4. Update polyline to show current progress
-  // }
 
   void _startNavigation() {
     if (selectedRouteMode == null || routeOptions.isEmpty) return;
@@ -352,16 +432,6 @@ class _MapScreenState extends State<HomeScreen1> {
     }
   }
 
-  // void _endNavigation() {
-  //   setState(() {
-  //     isNavigating = false;
-  //     currentNavigationInstruction = 'Navigation ended';
-  //     remainingDistance = '0 km';
-  //     remainingDuration = '0 min';
-  //     _clearRoute();
-  //   });
-  // }
-
   Future<void> _getDirections() async {
     if (currentLocation == null || destinationLocation == null) return;
 
@@ -429,6 +499,8 @@ class _MapScreenState extends State<HomeScreen1> {
   void dispose() {
     _compassSubscription?.cancel();
     _locationSubscription?.cancel();
+    _locationOrientationSubscription?.cancel();
+    _locationOrientationService.dispose();
     super.dispose();
   }
 
@@ -467,6 +539,7 @@ class _MapScreenState extends State<HomeScreen1> {
             ),
             markers: markers,
             polylines: polylines,
+            polygons: polygons,
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
             onTap: (position) => _placesService.getPlaceFromPoint(

@@ -19,10 +19,10 @@ class SearchBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Debug prints
-    print("debigs");
-    print('Current suggestions: $suggestions');
-    print('Recent searches: $recentSearches');
-    print('Search text: ${controller.text}');
+    // print("debigs");
+    // print('Current suggestions: $suggestions');
+    // print('Recent searches: $recentSearches');
+    // print('Search text: ${controller.text}');
 
     return Column(
       children: [

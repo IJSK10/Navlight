@@ -1,24 +1,25 @@
 {
   "type": "FeatureCollection",
-  "name": "lightrooms",
+  "name": "navlightwalk",
   "features": [
     {
       "type": "Feature",
       "properties": {
-        "id": 2101,
-        "name": "room101",
-        "type": "cabin"
+        "id": 1,
+        "type": "walkpath",
+        "name": "walkpath"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiLineString",
         "coordinates": [
           [
             [
-              [-73.12578965641016, 40.9136354586133],
-              [-73.12569067471453, 40.91363176477454],
-              [-73.12569372970515, 40.91355465584329],
-              [-73.12579515539325, 40.91356065833818],
-              [-73.12578965641016, 40.9136354586133]
+              -73.12575473919156,
+              40.91376739905236
+            ],
+            [
+              -73.12498030943709,
+              40.91367263696637
             ]
           ]
         ]
@@ -27,20 +28,21 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 2102,
-        "name": "room102",
-        "type": "cabin"
+        "id": 2,
+        "type": "walkpath",
+        "name": "walkpath2"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiLineString",
         "coordinates": [
           [
             [
-              [-73.12579576639136, 40.91354726815654],
-              [-73.12569189671078, 40.913543112582374],
-              [-73.12569678469575, 40.91347015912675],
-              [-73.12579943238008, 40.913478470283984],
-              [-73.12579576639136, 40.91354726815654]
+              -73.12565374274463,
+              40.91375490296089
+            ],
+            [
+              -73.12572040282683,
+              40.91339957993139
             ]
           ]
         ]
@@ -49,20 +51,21 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 2103,
-        "name": "room103",
-        "type": "cabin"
+        "id": 3,
+        "type": "walkpath",
+        "name": "walkpath3"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiLineString",
         "coordinates": [
           [
             [
-              [-73.12553975817865, 40.91365900683053],
-              [-73.12541144857322, 40.91365254261487],
-              [-73.1254169475563, 40.913575895438115],
-              [-73.12554403516548, 40.91358328312166],
-              [-73.12553975817865, 40.91365900683053]
+              -73.12581928261098,
+              40.913414268593044
+            ],
+            [
+              -73.12506361345172,
+              40.913323120483284
             ]
           ]
         ]
@@ -71,20 +74,21 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 2104,
-        "name": "room104",
-        "type": "cabin"
+        "id": 4,
+        "type": "walkpath",
+        "name": "walkpath5"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiLineString",
         "coordinates": [
           [
             [
-              [-73.12540717158637, 40.91365115742571],
-              [-73.12529413693397, 40.91364654012833],
-              [-73.12529963591706, 40.91356896948402],
-              [-73.12541144857322, 40.913577742359074],
-              [-73.12540717158637, 40.91365115742571]
+              -73.12536780849479,
+              40.91335987250406
+            ],
+            [
+              -73.12530463661368,
+              40.91371230794719
             ]
           ]
         ]
@@ -93,20 +97,21 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 2105,
-        "name": "room105",
-        "type": "cabin"
+        "id": 5,
+        "type": "walkpath",
+        "name": "walkpath5"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiLineString",
         "coordinates": [
           [
             [
-              [-73.12528985994712, 40.91364515493905],
-              [-73.12518110228157, 40.91364007591144],
-              [-73.12518721226279, 40.913562505259556],
-              [-73.12529535893022, 40.9135726633263],
-              [-73.12528985994712, 40.91364515493905]
+              -73.12508404662871,
+              40.91368531790506
+            ],
+            [
+              -73.12514748930042,
+              40.913333074858244
             ]
           ]
         ]
@@ -115,20 +120,21 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 2106,
-        "name": "room106",
-        "type": "cabin"
+        "id": 6,
+        "type": "walkpath",
+        "name": "entrance"
       },
       "geometry": {
-        "type": "MultiPolygon",
+        "type": "MultiLineString",
         "coordinates": [
           [
             [
-              [-73.12554342416735, 40.91357635716836],
-              [-73.1254175585544, 40.91356989294461],
-              [-73.12542244653937, 40.91348031720766],
-              [-73.12555075614479, 40.913487704901904],
-              [-73.12554342416735, 40.91357635716836]
+              -73.12523485043104,
+              40.91334415025503
+            ],
+            [
+              -73.12525199331272,
+              40.9132725744372
             ]
           ]
         ]
@@ -137,40 +143,35 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 21,
-        "name": "hallway",
-        "type": "hallway"
+        "id": 1,
+        "name": "pathway1",
+        "type": "pathway"
       },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
           [
             [
-              [-73.12501223617294, 40.91372495195386],
-              [-73.12578867378525, 40.913758090721565],
-              [-73.12578968141293, 40.91367950795497],
-              [-73.12566038262447, 40.913675365604966],
-              [-73.12568553301227, 40.913423656439846],
-              [-73.12580677077898, 40.913427555137034],
-              [-73.12580806054245, 40.91335055582509],
-              [-73.12569198182963, 40.91335542920193],
-              [-73.12570745899136, 40.9132984106705],
-              [-73.12557590311685, 40.913295973980034],
-              [-73.12557461335335, 40.913363226604105],
-              [-73.1251920372624, 40.9133210718876],
-              [-73.12518800675154, 40.913398071233864],
-              [-73.12556945429945, 40.91342170709117],
-              [-73.1255472058795, 40.91366878657802],
-              [-73.1251760764394, 40.913656603193004],
-              [-73.12519413312806, 40.913273556423476],
-              [-73.12513609377166, 40.91327160707037],
-              [-73.12513351424471, 40.91331644217722],
-              [-73.12504838985532, 40.91331156879751],
-              [-73.12503936151099, 40.91338369478046],
-              [-73.12512577566386, 40.9133905175045],
-              [-73.12509998039434, 40.91365367918027],
-              [-73.12502255428073, 40.91364844032381],
-              [-73.12501223617294, 40.91372495195386]
+              [
+                -73.12575235147875,
+                40.91377951288316
+              ],
+              [
+                -73.12497809290862,
+                40.91368221653345
+              ],
+              [
+                -73.12498846830763,
+                40.91366392166017
+              ],
+              [
+                -73.12575394218995,
+                40.91375191124246
+              ],
+              [
+                -73.12575235147875,
+                40.91377951288316
+              ]
             ]
           ]
         ]
@@ -179,25 +180,2749 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 1101,
-        "name": "room101",
-        "type": "ept"
+        "id": 1,
+        "name": "pathway2",
+        "type": "pathway"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12581530100734,
+                40.913422231316
+              ],
+              [
+                -73.12506498087231,
+                40.91333243971034
+              ],
+              [
+                -73.12506498087231,
+                40.91331248600362
+              ],
+              [
+                -73.12582850312116,
+                40.91340394044325
+              ],
+              [
+                -73.12581530100734,
+                40.913422231316
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "name": "pathway3",
+        "type": "pathway"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12573608832447,
+                40.91339728921555
+              ],
+              [
+                -73.1256678774031,
+                40.913773082531876
+              ],
+              [
+                -73.12563047141397,
+                40.9137664313413
+              ],
+              [
+                -73.12570748374455,
+                40.91338897517997
+              ],
+              [
+                -73.12573608832447,
+                40.91339728921555
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "name": "pathway4",
+        "type": "pathway"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12537963125152,
+                40.913355719027216
+              ],
+              [
+                -73.12531582103473,
+                40.91372652418383
+              ],
+              [
+                -73.12528721645481,
+                40.91372486138508
+              ],
+              [
+                -73.1253576277285,
+                40.9133474049864
+              ],
+              [
+                -73.12537963125152,
+                40.913355719027216
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "name": "pathway5",
+        "type": "pathway"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12515959602129,
+                40.91332745128422
+              ],
+              [
+                -73.12509358545223,
+                40.913698256599396
+              ],
+              [
+                -73.12507158192922,
+                40.9136916054013
+              ],
+              [
+                -73.12513539214598,
+                40.91332080004882
+              ],
+              [
+                -73.12515959602129,
+                40.91332745128422
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 151,
+        "type": "Light Engineering 151",
+        "name": "room"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-73.12566473557621, 40.91360835696629]
+        "coordinates": [
+          -73.1256581082896,
+          40.913725469105344
+        ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "id": 1102,
-        "name": "room102",
-        "type": "ept"
+        "id": 153,
+        "type": "Light Engineering 153",
+        "name": "room"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-73.12570563193138, 40.9135207541709]
+        "coordinates": [
+          -73.12566474820164,
+          40.91369619883824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 132,
+        "type": "Light Engineering 132",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12566696150566,
+          40.91368867219604
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 155,
+        "type": "Light Engineering 155",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12567028146168,
+          40.91366776485208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 157,
+        "type": "Light Engineering 157",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12567581472172,
+          40.913641003442166
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 159,
+        "type": "Light Engineering 159",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12568024132975,
+          40.91361256943225
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 161,
+        "type": "Light Engineering 161",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12568688124179,
+          40.913579953935255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 163,
+        "type": "Light Engineering 163",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12569130784982,
+          40.913552356194444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 165,
+        "type": "Light Engineering 165",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12569905441387,
+          40.9135230858507
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 167,
+        "type": "Light Engineering 167",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.1257023743699,
+          40.91349047030955
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 169,
+        "type": "Light Engineering 169",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12570790762993,
+          40.913464545124334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 171,
+        "type": "Light Engineering 171",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12571454754197,
+          40.913431093257415
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 136,
+        "type": "Light Engineering 136",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12571233423795,
+          40.91343945622573
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 136,
+        "type": "Light Engineering 136A",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12569905441387,
+          40.91350385104632
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 134,
+        "type": "Light Engineering 134",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12568356128577,
+          40.913595007243565
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 145,
+        "type": "Light Engineering 145",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12560941560129,
+          40.913748885309694
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 143,
+        "type": "Light Engineering 143",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.1255806426491,
+          40.91374554013815
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 141,
+        "type": "Light Engineering 141",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12555076304491,
+          40.913743031259386
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 139,
+        "type": "Light Engineering 139",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12552096244822,
+          40.91373870892234
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 137,
+        "type": "Light Engineering 137",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12548983888584,
+          40.9137349009278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 135,
+        "type": "Light Engineering 135",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12545812249371,
+          40.91373086893334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 133,
+        "type": "Light Engineering 133",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12542581327179,
+          40.91372728493806
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 131,
+        "type": "Light Engineering 131",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12539291122015,
+          40.91372325294314
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 129,
+        "type": "Light Engineering 129",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12535585936016,
+          40.91371832494901
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 125,
+        "type": "Light Engineering 125",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12515925126318,
+          40.91369476981986
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 183,
+        "type": "Light Engineering 183",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12531126005307,
+          40.91367439029361
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 116,
+        "type": "Light Engineering 116",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12531548149214,
+          40.91364837810951
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 181,
+        "type": "Light Engineering 181",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12532213513923,
+          40.91361294165406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 179,
+        "type": "Light Engineering 179",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.1253373736807,
+          40.91353006269863
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 175,
+        "type": "Light Engineering 150",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12534831091124,
+          40.9134680950093
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 110,
+        "type": "Light Engineering 110",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.1253278803182,
+          40.913582764772904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 176,
+        "type": "Light Engineering 176",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12534048151956,
+          40.913511710594186
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 102,
+        "type": "Light Engineering 102",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12519412609608,
+          40.91333798453397
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 103,
+        "type": "Light Engineering 103",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12513809774103,
+          40.913385430107944
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 105,
+        "type": "Light Engineering 105",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12513054782085,
+          40.91342266585101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 107,
+        "type": "Light Engineering 107",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12512531206787,
+          40.91345711332016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 109,
+        "type": "Light Engineering 109",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12511921946763,
+          40.913491656613026
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 108,
+        "type": "Light Engineering 108",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12511551722253,
+          40.91351096463596
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 112,
+        "type": "Light Engineering 112",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12510876051009,
+          40.91354765195872
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 113,
+        "type": "Light Engineering 113",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12510267814565,
+          40.913581922690824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 115,
+        "type": "Light Engineering 115",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12509207538115,
+          40.913640657279736
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 114,
+        "type": "Gents Restroom",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12509705244294,
+          40.91361171659763
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 114,
+        "type": "Ladies Restroom",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12508741548369,
+          40.91366497080718
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 150,
+        "type": "Light Engineering 150",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12566279043014,
+          40.913395313280375
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 152,
+        "type": "Light Engineering 152",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12560141895632,
+          40.91338827834721
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 154,
+        "type": "Light Engineering 154",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.1255269457072,
+          40.91337941954142
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 173,
+        "type": "Light Engineering 173",
+        "name": "restroom"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12551005131272,
+          40.91337733511636
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 175,
+        "type": "Light Engineering 175",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12543109587729,
+          40.91336769464959
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 156,
+        "type": "Light Engineering 156",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.1254486798389,
+          40.91337003962813
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 158,
+        "type": "Light Engineering 158",
+        "name": "room"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.12540765059515,
+          40.91336508911778
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 151,
+        "name": "Light Engineering 151",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12567474431276,
+                40.91373621083965
+              ],
+              [
+                -73.12572087001162,
+                40.9137382026698
+              ],
+              [
+                -73.12572350576583,
+                40.91371928028094
+              ],
+              [
+                -73.1256786979441,
+                40.91371529661943
+              ],
+              [
+                -73.12567474431276,
+                40.91373621083965
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 153,
+        "name": "Light Engineering 153",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12567738006697,
+                40.91370832521122
+              ],
+              [
+                -73.12572350576583,
+                40.91371031704221
+              ],
+              [
+                -73.12572614152005,
+                40.91369139464536
+              ],
+              [
+                -73.1256813336983,
+                40.91368741098218
+              ],
+              [
+                -73.12567738006697,
+                40.91370832521122
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 155,
+        "name": "Light Engineering 155",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12568396945251,
+                40.91368043957103
+              ],
+              [
+                -73.12573009515137,
+                40.91368243140287
+              ],
+              [
+                -73.12573273090558,
+                40.913663508998035
+              ],
+              [
+                -73.12568792308385,
+                40.913659525333166
+              ],
+              [
+                -73.12568396945251,
+                40.91368043957103
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 157,
+        "name": "Light Engineering 157",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12568792308385,
+                40.913652553919064
+              ],
+              [
+                -73.1257340487827,
+                40.91365454575174
+              ],
+              [
+                -73.12573668453692,
+                40.91363562333893
+              ],
+              [
+                -73.12569187671518,
+                40.91363163967238
+              ],
+              [
+                -73.12568792308385,
+                40.913652553919064
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 163,
+        "name": "Light Engineering 163",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.1257076912405,
+                40.913563917304394
+              ],
+              [
+                -73.12575381693937,
+                40.91356590913973
+              ],
+              [
+                -73.12575645269358,
+                40.913546986701554
+              ],
+              [
+                -73.12571164487184,
+                40.913543003029666
+              ],
+              [
+                -73.1257076912405,
+                40.913563917304394
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 165,
+        "name": "Light Engineering 165",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12571164487184,
+                40.913534039767036
+              ],
+              [
+                -73.1257577705707,
+                40.913536031603286
+              ],
+              [
+                -73.12576040632491,
+                40.91351710915655
+              ],
+              [
+                -73.12571559850318,
+                40.91351312548286
+              ],
+              [
+                -73.12571164487184,
+                40.913534039767036
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 159,
+        "name": "Light Engineering 159",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12569714822365,
+                40.913623672338574
+              ],
+              [
+                -73.1257432739225,
+                40.913625664172116
+              ],
+              [
+                -73.12574590967671,
+                40.91360674175104
+              ],
+              [
+                -73.12570110185497,
+                40.91360275808276
+              ],
+              [
+                -73.12569714822365,
+                40.913623672338574
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 161,
+        "name": "Light Engineering 161",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12570110185497,
+                40.91359279891099
+              ],
+              [
+                -73.12574722755382,
+                40.91359479074547
+              ],
+              [
+                -73.12574986330803,
+                40.91357586831555
+              ],
+              [
+                -73.12570505548629,
+                40.91357188464541
+              ],
+              [
+                -73.12570110185497,
+                40.91359279891099
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 167,
+        "name": "Light Engineering 167",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12571691638028,
+                40.913505158134775
+              ],
+              [
+                -73.12576304207913,
+                40.91350714997189
+              ],
+              [
+                -73.12576567783334,
+                40.913488227516886
+              ],
+              [
+                -73.12572087001162,
+                40.91348424384146
+              ],
+              [
+                -73.12571691638028,
+                40.913505158134775
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 169,
+        "name": "Light Engineering 169",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12572218788873,
+                40.91347528057087
+              ],
+              [
+                -73.12576831358759,
+                40.91347727240888
+              ],
+              [
+                -73.1257709493418,
+                40.91345834994533
+              ],
+              [
+                -73.12572614152005,
+                40.913454366268105
+              ],
+              [
+                -73.12572218788873,
+                40.91347528057087
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 171,
+        "name": "Light Engineering 171",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12572745939715,
+                40.91344440707399
+              ],
+              [
+                -73.12577358509601,
+                40.91344639891293
+              ],
+              [
+                -73.12577622085021,
+                40.913427476440546
+              ],
+              [
+                -73.12573141302849,
+                40.91342349276146
+              ],
+              [
+                -73.12572745939715,
+                40.91344440707399
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 154,
+        "name": "Light Engineering 154",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12555486334331,
+                40.91337019583448
+              ],
+              [
+                -73.12548232706607,
+                40.91336236501791
+              ],
+              [
+                -73.12548939228789,
+                40.91333388931348
+              ],
+              [
+                -73.12556428363905,
+                40.913343143918766
+              ],
+              [
+                -73.12555486334331,
+                40.91337019583448
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 152,
+        "name": "Light Engineering 152",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12563587788671,
+                40.91338016232695
+              ],
+              [
+                -73.12556334160948,
+                40.91337233151157
+              ],
+              [
+                -73.12557040683129,
+                40.91334385581142
+              ],
+              [
+                -73.12564529818246,
+                40.91335311041531
+              ],
+              [
+                -73.12563587788671,
+                40.91338016232695
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 145,
+        "name": "Light Engineering 145",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12561615557895,
+                40.91376237942324
+              ],
+              [
+                -73.12561260475489,
+                40.91378056653132
+              ],
+              [
+                -73.12559208888247,
+                40.913778181337115
+              ],
+              [
+                -73.12559721785057,
+                40.913759696079
+              ],
+              [
+                -73.12561615557895,
+                40.91376237942324
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 143,
+        "name": "Light Engineering 143",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12558665316874,
+                40.913758969189715
+              ],
+              [
+                -73.12558310234468,
+                40.913777156298735
+              ],
+              [
+                -73.12556258647226,
+                40.91377477110439
+              ],
+              [
+                -73.12556771544037,
+                40.91375628584533
+              ],
+              [
+                -73.12558665316874,
+                40.913758969189715
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 139,
+        "name": "Light Engineering 139",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12552656465128,
+                40.913751074839034
+              ],
+              [
+                -73.1255230138272,
+                40.91376926195023
+              ],
+              [
+                -73.12550249795478,
+                40.91376687675561
+              ],
+              [
+                -73.12550762692288,
+                40.91374839149433
+              ],
+              [
+                -73.12552656465128,
+                40.913751074839034
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 141,
+        "name": "Light Engineering 141",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12555639979603,
+                40.91375486398783
+              ],
+              [
+                -73.12555284897195,
+                40.91377305109799
+              ],
+              [
+                -73.12553233309953,
+                40.913770665903506
+              ],
+              [
+                -73.12553746206764,
+                40.913752180643286
+              ],
+              [
+                -73.12555639979603,
+                40.91375486398783
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 135,
+        "name": "Light Engineering 135",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.1254638835824,
+                40.913743875455715
+              ],
+              [
+                -73.12546033275832,
+                40.913762062568885
+              ],
+              [
+                -73.12543981688592,
+                40.913759677374
+              ],
+              [
+                -73.12544494585401,
+                40.91374119211072
+              ],
+              [
+                -73.1254638835824,
+                40.913743875455715
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 137,
+        "name": "Light Engineering 137",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12549580755717,
+                40.913747599997876
+              ],
+              [
+                -73.12549225673311,
+                40.91376578711002
+              ],
+              [
+                -73.12547174086069,
+                40.913763401915276
+              ],
+              [
+                -73.12547686982879,
+                40.91374491665303
+              ],
+              [
+                -73.12549580755717,
+                40.913747599997876
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 131,
+        "name": "Light Engineering 131",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12539969827876,
+                40.91373541185802
+              ],
+              [
+                -73.12539614745468,
+                40.91375359897353
+              ],
+              [
+                -73.12537563158226,
+                40.91375121377833
+              ],
+              [
+                -73.12538076055037,
+                40.913732728512684
+              ],
+              [
+                -73.12539969827876,
+                40.91373541185802
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 133,
+        "name": "Light Engineering 133",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.1254316245633,
+                40.91373983311449
+              ],
+              [
+                -73.12542807373923,
+                40.91375802022877
+              ],
+              [
+                -73.12540755786681,
+                40.91375563503374
+              ],
+              [
+                -73.12541268683492,
+                40.913737149769325
+              ],
+              [
+                -73.1254316245633,
+                40.91373983311449
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 129,
+        "name": "Light Engineering 129",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12536317379644,
+                40.91373067454786
+              ],
+              [
+                -73.12535962297237,
+                40.913748861664665
+              ],
+              [
+                -73.12533910709995,
+                40.913746476469306
+              ],
+              [
+                -73.12534423606806,
+                40.91372799120233
+              ],
+              [
+                -73.12536317379644,
+                40.91373067454786
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 183,
+        "name": "Light Engineering 183",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12538781614467,
+                40.913695530561995
+              ],
+              [
+                -73.12532441122463,
+                40.91368825234829
+              ],
+              [
+                -73.12533083197602,
+                40.91365307430407
+              ],
+              [
+                -73.1253958420839,
+                40.91365731993109
+              ],
+              [
+                -73.12538781614467,
+                40.913695530561995
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 136,
+        "name": "Light Engineering 136A",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12567984141423,
+                40.91352345318523
+              ],
+              [
+                -73.12561643649418,
+                40.91351617495258
+              ],
+              [
+                -73.12562285724557,
+                40.9134809968168
+              ],
+              [
+                -73.12568786735346,
+                40.91348524245488
+              ],
+              [
+                -73.12567984141423,
+                40.91352345318523
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 136,
+        "name": "Light Engineering 136",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12569203128173,
+                40.91345854369645
+              ],
+              [
+                -73.1256286263617,
+                40.91345126545665
+              ],
+              [
+                -73.1256350471131,
+                40.913416087286336
+              ],
+              [
+                -73.12570005722098,
+                40.91342033292858
+              ],
+              [
+                -73.12569203128173,
+                40.91345854369645
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 134,
+        "name": "Light Engineering 134",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12566218434787,
+                40.91361079191454
+              ],
+              [
+                -73.12559877942786,
+                40.913603513691505
+              ],
+              [
+                -73.12560520017925,
+                40.91356833560221
+              ],
+              [
+                -73.12567021028713,
+                40.913572581234675
+              ],
+              [
+                -73.12566218434787,
+                40.91361079191454
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 150,
+        "name": "Light Engineering 150",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12568874657642,
+                40.91336561924785
+              ],
+              [
+                -73.12567970823913,
+                40.91338679310607
+              ],
+              [
+                -73.12564897789238,
+                40.913381328885244
+              ],
+              [
+                -73.12565892006339,
+                40.91336152108096
+              ],
+              [
+                -73.12568874657642,
+                40.91336561924785
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 156,
+        "name": "Light Engineering 156",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.1254759879667,
+                40.913340766996825
+              ],
+              [
+                -73.12546694962941,
+                40.91336194086301
+              ],
+              [
+                -73.12543621928266,
+                40.91335647664013
+              ],
+              [
+                -73.12544616145367,
+                40.9133366688284
+              ],
+              [
+                -73.1254759879667,
+                40.913340766996825
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 173,
+        "name": "Light Engineering 173",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12552424883792,
+                40.9133881591612
+              ],
+              [
+                -73.12551521050064,
+                40.91340933301222
+              ],
+              [
+                -73.12548448015389,
+                40.91340386879325
+              ],
+              [
+                -73.12549442232489,
+                40.91338406099571
+              ],
+              [
+                -73.12552424883792,
+                40.9133881591612
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 175,
+        "name": "Light Engineering 175",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12544290380241,
+                40.913377913747
+              ],
+              [
+                -73.12543386546513,
+                40.91339908760129
+              ],
+              [
+                -73.12540313511838,
+                40.913393623381474
+              ],
+              [
+                -73.12541307728938,
+                40.91337381558087
+              ],
+              [
+                -73.12544290380241,
+                40.913377913747
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 158,
+        "name": "Light Engineering 158",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12543524951444,
+                40.913334619744084
+              ],
+              [
+                -73.12542621117716,
+                40.91335579361224
+              ],
+              [
+                -73.1253954808304,
+                40.91335032938885
+              ],
+              [
+                -73.12540542300141,
+                40.91333052157527
+              ],
+              [
+                -73.12543524951444,
+                40.913334619744084
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 125,
+        "name": "Light Engineering 125",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.1252159188504,
+                40.91371312366488
+              ],
+              [
+                -73.12520782539467,
+                40.91373962718478
+              ],
+              [
+                -73.12512149520026,
+                40.91373096257367
+              ],
+              [
+                -73.12512891420135,
+                40.91370038158423
+              ],
+              [
+                -73.1252159188504,
+                40.91371312366488
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 116,
+        "name": "Light Engineering 116",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12529612915277,
+                40.91366754701886
+              ],
+              [
+                -73.12525411283679,
+                40.91366315064126
+              ],
+              [
+                -73.1252605768854,
+                40.91362358322962
+              ],
+              [
+                -73.12530517882082,
+                40.91362651414982
+              ],
+              [
+                -73.12529612915277,
+                40.91366754701886
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 110,
+        "name": "Light Engineering 110",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12530841084514,
+                40.913600135863405
+              ],
+              [
+                -73.12526639452915,
+                40.91359573948131
+              ],
+              [
+                -73.12527285857776,
+                40.91355617202934
+              ],
+              [
+                -73.1253174605132,
+                40.91355910295251
+              ],
+              [
+                -73.12530841084514,
+                40.913600135863405
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 176,
+        "name": "Light Engineering 176",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12532183501807,
+                40.913531890195316
+              ],
+              [
+                -73.1252798187021,
+                40.91352749380869
+              ],
+              [
+                -73.12528628275071,
+                40.91348792631586
+              ],
+              [
+                -73.12533088468614,
+                40.91349085724207
+              ],
+              [
+                -73.12532183501807,
+                40.913531890195316
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 132,
+        "name": "Light Engineering 132",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12564211949977,
+                40.9137048022234
+              ],
+              [
+                -73.12557871457973,
+                40.91369752401072
+              ],
+              [
+                -73.12558513533114,
+                40.91366234597144
+              ],
+              [
+                -73.12565014543901,
+                40.91366659159787
+              ],
+              [
+                -73.12564211949977,
+                40.9137048022234
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 181,
+        "name": "Light Engineering 181",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12539714895811,
+                40.91363696585091
+              ],
+              [
+                -73.12533374403807,
+                40.91362968763075
+              ],
+              [
+                -73.12534016478946,
+                40.91359450955538
+              ],
+              [
+                -73.12540517489734,
+                40.91359875518616
+              ],
+              [
+                -73.12539714895811,
+                40.91363696585091
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 179,
+        "name": "Light Engineering 179",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12541057200148,
+                40.91355581570638
+              ],
+              [
+                -73.12534716708146,
+                40.913548537477304
+              ],
+              [
+                -73.12535358783285,
+                40.913513359358745
+              ],
+              [
+                -73.12541859794074,
+                40.91351760499474
+              ],
+              [
+                -73.12541057200148,
+                40.91355581570638
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 175,
+        "name": "Light Engineering 175",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12541958826657,
+                40.91349335787528
+              ],
+              [
+                -73.12535618334654,
+                40.91348607963931
+              ],
+              [
+                -73.12536260409793,
+                40.91345090148753
+              ],
+              [
+                -73.1254276142058,
+                40.91345514712754
+              ],
+              [
+                -73.12541958826657,
+                40.91349335787528
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 116,
+        "name": "Gents Restroom",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12509796407562,
+                40.9136739052996
+              ],
+              [
+                -73.1251013550381,
+                40.91365084242819
+              ],
+              [
+                -73.1251348125346,
+                40.91365357580597
+              ],
+              [
+                -73.12513323008544,
+                40.913675784496185
+              ],
+              [
+                -73.12509796407562,
+                40.9136739052996
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 104,
+        "name": "Ladies Restroom",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12510770152531,
+                40.91362386704975
+              ],
+              [
+                -73.1251110924878,
+                40.91360080416088
+              ],
+              [
+                -73.1251445499843,
+                40.91360353754073
+              ],
+              [
+                -73.12514296753514,
+                40.91362574624776
+              ],
+              [
+                -73.12510770152531,
+                40.91362386704975
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 112,
+        "name": "Light Engineering 112",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12512133395487,
+                40.91356131918417
+              ],
+              [
+                -73.12512472491736,
+                40.91353825627348
+              ],
+              [
+                -73.12515818241386,
+                40.9135409896559
+              ],
+              [
+                -73.1251565999647,
+                40.91356319838395
+              ],
+              [
+                -73.12512133395487,
+                40.91356131918417
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 108,
+        "name": "Light Engineering 108",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12512425518979,
+                40.913523790436415
+              ],
+              [
+                -73.12512764615225,
+                40.913500727512634
+              ],
+              [
+                -73.12516110364876,
+                40.91350346089662
+              ],
+              [
+                -73.1251595211996,
+                40.91352566963726
+              ],
+              [
+                -73.12512425518979,
+                40.913523790436415
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 115,
+        "name": "Light Engineering 115",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12504148686746,
+                40.913648886179416
+              ],
+              [
+                -73.12504487782994,
+                40.91362582329927
+              ],
+              [
+                -73.12507833532645,
+                40.91362855667808
+              ],
+              [
+                -73.12507675287728,
+                40.91365076537671
+              ],
+              [
+                -73.12504148686746,
+                40.913648886179416
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 113,
+        "name": "Light Engineering 113",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12505414555206,
+                40.91359075348122
+              ],
+              [
+                -73.12505753651453,
+                40.9135676905808
+              ],
+              [
+                -73.12509099401103,
+                40.913570423962014
+              ],
+              [
+                -73.12508941156189,
+                40.913592632680164
+              ],
+              [
+                -73.12505414555206,
+                40.91359075348122
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 109,
+        "name": "Light Engineering 109",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12506981110495,
+                40.91349883149647
+              ],
+              [
+                -73.12507320206743,
+                40.913475768563984
+              ],
+              [
+                -73.12510665956393,
+                40.913478501948994
+              ],
+              [
+                -73.12510507711478,
+                40.91350071069803
+              ],
+              [
+                -73.12506981110495,
+                40.91349883149647
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 107,
+        "name": "Light Engineering 107",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12507661775966,
+                40.91346405794855
+              ],
+              [
+                -73.12508000872214,
+                40.913440995003924
+              ],
+              [
+                -73.12511346621864,
+                40.91344372839038
+              ],
+              [
+                -73.12511188376948,
+                40.91346593715109
+              ],
+              [
+                -73.12507661775966,
+                40.91346405794855
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 103,
+        "name": "Light Engineering 103",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12508648719418,
+                40.91339473450851
+              ],
+              [
+                -73.12508987815666,
+                40.9133716715397
+              ],
+              [
+                -73.12512333565316,
+                40.913374404929016
+              ],
+              [
+                -73.125121753204,
+                40.91339661371302
+              ],
+              [
+                -73.12508648719418,
+                40.91339473450851
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 105,
+        "name": "Light Engineering 105",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12508214677833,
+                40.91343045173909
+              ],
+              [
+                -73.12508553774079,
+                40.913407388782744
+              ],
+              [
+                -73.1251189952373,
+                40.91341012217059
+              ],
+              [
+                -73.12511741278814,
+                40.91343233094259
+              ],
+              [
+                -73.12508214677833,
+                40.91343045173909
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 102,
+        "name": "Light Engineering 102",
+        "type": "room"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -73.12535342477996,
+                40.91336862215651
+              ],
+              [
+                -73.12533591515356,
+                40.91346480881415
+              ],
+              [
+                -73.12513657479113,
+                40.91345055894777
+              ],
+              [
+                -73.12515475786472,
+                40.91334419377673
+              ],
+              [
+                -73.12535342477996,
+                40.91336862215651
+              ]
+            ]
+          ]
+        ]
       }
     }
   ]
