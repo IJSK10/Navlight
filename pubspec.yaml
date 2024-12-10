@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_compass:
+    git: https://github.com/hemanthrajv/flutter_compass.git
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,6 +41,10 @@ dependencies:
   latlong2: ^0.9.1
   dio: ^5.7.0
   geolocator: ^13.0.2
+  url_launcher: ^6.1.11
+  share_plus: ^7.0.0
+  permission_handler: ^11.3.1
+  sensors_plus: ^6.1.0
 
 dev_dependencies:
   flutter_test:

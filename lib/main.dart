@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:navlight/home.dart';
+import 'package:navlight/home1.dart';
 import 'package:navlight/maphome.dart';
 
 void main() {
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MapScreen(),
+      home: const HomeScreen1(),
     );
   }
 }

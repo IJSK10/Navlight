@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -16,7 +18,8 @@ class _MapScreenState extends State<MapScreen> {
   final List<String> recentSearches = [];
   List<dynamic> suggestions = [];
   Set<Marker> markers = {};
-  Set<Polyline> _polylines = {};
+  final Set<Polyline> _polylines = {};
+
   LatLng? destinationLocation;
 
   String? routeDistance;
@@ -35,7 +38,6 @@ class _MapScreenState extends State<MapScreen> {
     _getCurrentLocation();
   }
 
-  // Check and request location permissions
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -72,7 +74,6 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
-  // Get current location
   Future<void> _getCurrentLocation() async {
     final hasPermission = await _handleLocationPermission();
 
@@ -87,7 +88,6 @@ class _MapScreenState extends State<MapScreen> {
         isLoadingLocation = false;
         locationError = '';
 
-        // Update markers
         markers.clear();
         markers.add(
           Marker(
@@ -98,7 +98,6 @@ class _MapScreenState extends State<MapScreen> {
         );
       });
 
-      // Only move camera if controller is initialized
       if (mapController != null) {
         await mapController!.animateCamera(
           CameraUpdate.newCameraPosition(
@@ -117,24 +116,199 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void onMapCreated(GoogleMapController controller) {
-    setState(() {
-      mapController = controller;
-      // If location is already available, move camera
-      if (currentLocation != null) {
-        controller.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: currentLocation!,
-              zoom: 15,
+  Future<void> getPlaceDetails(String placeId) async {
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?'
+        'place_id=$placeId'
+        '&fields=name,formatted_address,rating,opening_hours,photos,types,website,formatted_phone_number,geometry'
+        '&key=$apiKey';
+
+    try {
+      final response = await Dio().get(url);
+      if (response.data['status'] == 'OK') {
+        final place = response.data['result'];
+        final location = place['geometry']['location'];
+        destinationLocation = LatLng(location['lat'], location['lng']);
+
+        // Update markers
+        setState(() {
+          markers
+              .removeWhere((marker) => marker.markerId.value == 'destination');
+          markers.add(
+            Marker(
+              markerId: const MarkerId('destination'),
+              position: destinationLocation!,
+              infoWindow: InfoWindow(title: place['name']),
+            ),
+          );
+        });
+
+        // Add to recent searches
+        if (!recentSearches.contains(place['name'])) {
+          setState(() {
+            recentSearches.insert(0, place['name']);
+            if (recentSearches.length > 5) {
+              recentSearches.removeLast();
+            }
+          });
+        }
+
+        // Show place details bottom sheet
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => DraggableScrollableSheet(
+            initialChildSize: 0.4,
+            minChildSize: 0.2,
+            maxChildSize: 0.8,
+            builder: (context, scrollController) => Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  // Drag handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  // Place name
+                  Text(
+                    place['name'] ?? 'Unknown Place',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Rating
+                  if (place['rating'] != null)
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber),
+                        Text(
+                          ' ${place['rating']}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 8),
+                  // Address
+                  Text(
+                    place['formatted_address'] ?? '',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+                  // Phone number
+                  if (place['formatted_phone_number'] != null)
+                    ListTile(
+                      leading: const Icon(Icons.phone),
+                      title: Text(place['formatted_phone_number']),
+                      onTap: () async {
+                        final url = 'tel:${place['formatted_phone_number']}';
+                        if (await canLaunchUrl(Uri.parse(url))) {
+                          await launchUrl(Uri.parse(url));
+                        }
+                      },
+                    ),
+                  // Opening hours
+                  if (place['opening_hours']?['weekday_text'] != null)
+                    ExpansionTile(
+                      leading: const Icon(Icons.access_time),
+                      title: const Text('Opening Hours'),
+                      children: [
+                        ...place['opening_hours']['weekday_text']
+                            .map<Widget>((hours) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(hours),
+                                ))
+                            .toList(),
+                      ],
+                    ),
+                  const SizedBox(height: 16),
+                  // Action buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (currentLocation != null &&
+                              destinationLocation != null) {
+                            _getDirections(
+                                currentLocation!, destinationLocation!);
+                          }
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.directions),
+                        label: const Text('Directions'),
+                      ),
+                      if (place['website'] != null)
+                        ElevatedButton.icon(
+                          onPressed: () async {
+                            if (await canLaunchUrl(
+                                Uri.parse(place['website']))) {
+                              await launchUrl(
+                                Uri.parse(place['website']),
+                                mode: LaunchMode.externalApplication,
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.language),
+                          label: const Text('Website'),
+                        ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          // Share place details
+                          final text = '${place['name']}\n'
+                              '${place['formatted_address']}\n'
+                              'Rating: ${place['rating'] ?? 'N/A'}\n'
+                              '${place['website'] ?? ''}';
+                          Share.share(text);
+                        },
+                        icon: const Icon(Icons.share),
+                        label: const Text('Share'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
+
+        // Animate camera to show the place
+        if (mapController != null) {
+          await mapController!.animateCamera(
+            CameraUpdate.newLatLngZoom(
+              destinationLocation!,
+              15,
+            ),
+          );
+        }
       }
-    });
+    } catch (e) {
+      // Show error snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching place details: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      debugPrint('Error fetching place details: $e');
+    }
   }
 
-  // Rest of the methods remain same as before
   Future<void> getPlaceSuggestions(String query) async {
     if (query.isEmpty) {
       setState(() => suggestions = []);
@@ -147,135 +321,151 @@ class _MapScreenState extends State<MapScreen> {
 
     try {
       final response = await Dio().get(url);
-      print("suggestions");
-      print(response.data);
       setState(() => suggestions = response.data['predictions']);
     } catch (e) {
       debugPrint('Error fetching suggestions: $e');
     }
   }
 
-  Future<void> getPlaceDetails(String placeId) async {
-    if (mapController == null) return; // Add this check
-
+  Future<void> getPlaceFromPoint(LatLng location) async {
     final String url =
-        'https://maps.googleapis.com/maps/api/place/details/json?'
-        'place_id=$placeId&fields=name,formatted_address,geometry,photos&key=$apiKey';
-
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
+        'location=${location.latitude},${location.longitude}'
+        '&rankby=distance' // Use rankby to include places ordered by distance
+        '&key=$apiKey';
     try {
       final response = await Dio().get(url);
-      final result = response.data['result'];
-      final location = result['geometry']['location'];
-      final LatLng placeLatLng = LatLng(location['lat'], location['lng']);
-
-      if (!recentSearches.contains(result['formatted_address'])) {
-        setState(() {
-          recentSearches.insert(0, result['formatted_address']);
-          if (recentSearches.length > 5) recentSearches.removeLast();
-        });
+      print(response.data['results'][0]);
+      if (response.data['status'] == 'OK' &&
+          response.data['results'].isNotEmpty) {
+        // Get the closest place
+        final place = response.data['results'][0];
+        showPlaceDetails(place['place_id']);
       }
-
-      setState(() {
-        markers.clear();
-        // Add back the current location marker
-        if (currentLocation != null) {
-          markers.add(
-            Marker(
-              markerId: const MarkerId('currentLocation'),
-              position: currentLocation!,
-              infoWindow: const InfoWindow(title: 'You are here'),
-            ),
-          );
-        }
-        // Add the searched place marker
-        markers.add(
-          Marker(
-            markerId: MarkerId(placeId),
-            position: placeLatLng,
-            infoWindow: InfoWindow(
-              title: result['name'],
-              snippet: result['formatted_address'],
-            ),
-          ),
-        );
-      });
-
-      await mapController!.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: placeLatLng, zoom: 15),
-        ),
-      );
-
-      showPlaceDetails(result);
-      searchController.clear();
-      setState(() => suggestions = []);
     } catch (e) {
-      debugPrint('Error fetching place details: $e');
+      debugPrint('Error fetching place from point: $e');
     }
   }
 
-  void showPlaceDetails(Map<String, dynamic> placeDetails) {
-    final location = placeDetails['geometry']['location'];
-    destinationLocation = LatLng(location['lat'], location['lng']);
+  Future<void> showPlaceDetails(String placeId) async {
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?'
+        'place_id=$placeId'
+        '&fields=name,formatted_address,rating,opening_hours,photos,types,website,formatted_phone_number,geometry'
+        '&key=$apiKey';
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // This allows the modal to be draggable
-      backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.3,
-        minChildSize: 0.2,
-        maxChildSize: 0.8,
-        builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Drag handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
+    try {
+      final response = await Dio().get(url);
+      if (response.data['status'] == 'OK') {
+        final place = response.data['result'];
+        final location = place['geometry']['location'];
+        destinationLocation = LatLng(location['lat'], location['lng']);
+
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => DraggableScrollableSheet(
+            initialChildSize: 0.4,
+            minChildSize: 0.2,
+            maxChildSize: 0.8,
+            builder: (context, scrollController) => Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
                   ),
-                ),
+                  Text(
+                    place['name'] ?? 'Unknown Place',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  if (place['rating'] != null)
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber),
+                        Text(
+                          ' ${place['rating']}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 8),
+                  Text(
+                    place['formatted_address'] ?? '',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+                  if (place['formatted_phone_number'] != null)
+                    ListTile(
+                      leading: const Icon(Icons.phone),
+                      title: Text(place['formatted_phone_number']),
+                    ),
+                  if (place['opening_hours']?['weekday_text'] != null)
+                    ExpansionTile(
+                      leading: const Icon(Icons.access_time),
+                      title: const Text('Opening Hours'),
+                      children: [
+                        ...place['opening_hours']['weekday_text']
+                            .map<Widget>((hours) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(hours),
+                                ))
+                            .toList(),
+                      ],
+                    ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (currentLocation != null &&
+                              destinationLocation != null) {
+                            _getDirections(
+                                currentLocation!, destinationLocation!);
+                          }
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.directions),
+                        label: const Text('Directions'),
+                      ),
+                      if (place['website'] != null)
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // Add website handling
+                          },
+                          icon: const Icon(Icons.language),
+                          label: const Text('Website'),
+                        ),
+                    ],
+                  ),
+                ],
               ),
-              Text(
-                placeDetails['name'] ?? '',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                placeDetails['formatted_address'] ?? '',
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (currentLocation != null && destinationLocation != null) {
-                    print("pressed getdirections");
-                    _getDirections(currentLocation!, destinationLocation!);
-                  }
-                  Navigator.pop(context);
-                },
-                child: const Text('Get Directions'),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        );
+      }
+    } catch (e) {
+      debugPrint('Error fetching place details: $e');
+    }
   }
 
   Future<void> _getDirections(LatLng origin, LatLng destination) async {
@@ -292,14 +482,12 @@ class _MapScreenState extends State<MapScreen> {
         final route = response.data['routes'][0];
         final leg = route['legs'][0];
 
-        // Get distance and duration
         setState(() {
           routeDistance = leg['distance']['text'];
           routeDuration = leg['duration']['text'];
           isRouteVisible = true;
         });
 
-        // Decode polyline points
         final points = _decodePolyline(route['overview_polyline']['points']);
 
         setState(() {
@@ -312,29 +500,15 @@ class _MapScreenState extends State<MapScreen> {
           ));
         });
 
-        // Adjust camera to show the entire route
         if (points.isNotEmpty) {
           LatLngBounds bounds = _calculateBounds(points);
           mapController?.animateCamera(
             CameraUpdate.newLatLngBounds(bounds, 50),
           );
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not find route: ${response.data['status']}'),
-            backgroundColor: Colors.red,
-          ),
-        );
       }
     } catch (e) {
-      print('Error getting directions: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error getting directions: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      debugPrint('Error getting directions: $e');
     }
   }
 
@@ -393,6 +567,8 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  //
+
   @override
   Widget build(BuildContext context) {
     // Show loading indicator while getting location
@@ -426,7 +602,21 @@ class _MapScreenState extends State<MapScreen> {
       body: Stack(
         children: [
           GoogleMap(
-            onMapCreated: onMapCreated,
+            onMapCreated: (GoogleMapController controller) {
+              setState(() {
+                mapController = controller;
+                if (currentLocation != null) {
+                  controller.animateCamera(
+                    CameraUpdate.newCameraPosition(
+                      CameraPosition(
+                        target: currentLocation!,
+                        zoom: 15,
+                      ),
+                    ),
+                  );
+                }
+              });
+            },
             initialCameraPosition: CameraPosition(
               target: currentLocation ?? const LatLng(0, 0),
               zoom: 15,
@@ -435,6 +625,9 @@ class _MapScreenState extends State<MapScreen> {
             polylines: _polylines, // Add this line
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
+            onTap: (LatLng position) {
+              getPlaceFromPoint(position);
+            },
           ),
           SafeArea(
             child: Padding(
@@ -480,6 +673,9 @@ class _MapScreenState extends State<MapScreen> {
                           recentSearches.isNotEmpty))
                     Container(
                       margin: const EdgeInsets.only(top: 8),
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
@@ -492,7 +688,7 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                       child: ListView(
                         shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
+                        // physics: const ClampingScrollPhysics(),
                         children: [
                           if (searchController.text.isEmpty &&
                               recentSearches.isNotEmpty) ...[
@@ -522,9 +718,11 @@ class _MapScreenState extends State<MapScreen> {
                               (suggestion) => ListTile(
                                 leading: const Icon(Icons.location_on),
                                 title: Text(suggestion['description']),
-                                onTap: () => getPlaceDetails(
-                                  suggestion['place_id'],
-                                ),
+                                onTap: () {
+                                  getPlaceDetails(suggestion['place_id']);
+                                  setState(() => suggestions = []);
+                                  searchController.clear();
+                                },
                               ),
                             ),
                         ],
