@@ -38,15 +38,25 @@ class IndoorPathfinder {
     _graphNodes.clear();
 
     try {
-      final jsonString =
+      // Load the rectangular path points
+      final rectangleJsonString =
           await rootBundle.loadString("assets/walkpoints.geojson");
-      final jsonData = json.decode(jsonString);
+      final rectangleJsonData = json.decode(rectangleJsonString);
 
-      // Parse features and create graph nodes
-      final features = jsonData['features'] as List;
+      // Load the middle path points
+      final middlePathJsonString =
+          await rootBundle.loadString("assets/walkpoints1.geojson");
+      final middlePathJsonData = json.decode(middlePathJsonString);
 
-      // Create nodes first
-      for (var feature in features) {
+      // Parse and create graph nodes for both paths
+      final rectangleFeatures = rectangleJsonData['features'] as List;
+      final middlePathFeatures = middlePathJsonData['features'] as List;
+
+      // Combine features from both paths
+      final allFeatures = [...rectangleFeatures, ...middlePathFeatures];
+
+      // Create nodes for all features
+      for (var feature in allFeatures) {
         final coords = feature['geometry']['coordinates'][0];
         final node = GraphNode(
             id: feature['properties']['id'] ?? 0,
@@ -54,35 +64,73 @@ class IndoorPathfinder {
         _graphNodes.add(node);
       }
 
-      // Connect successive nodes
-      for (int i = 0; i < _graphNodes.length - 1; i++) {
-        final currentNode = _graphNodes[i];
-        final nextNode = _graphNodes[i + 1];
+      // Connect nodes within each original path
+      void connectNodesInPath(
+          List<GraphNode> pathNodes, bool connectFirstLast) {
+        for (int i = 0; i < pathNodes.length - 1; i++) {
+          final currentNode = pathNodes[i];
+          final nextNode = pathNodes[i + 1];
 
-        final distance =
-            _calculateDistance(currentNode.location, nextNode.location);
+          final distance =
+              _calculateDistance(currentNode.location, nextNode.location);
 
-        // Bidirectional connection
-        currentNode.connections[nextNode] = distance;
-        nextNode.connections[currentNode] = distance;
+          // Bidirectional connection
+          currentNode.connections[nextNode] = distance;
+          nextNode.connections[currentNode] = distance;
+        }
+
+        // Only connect first and last for rectangular path
+        if (connectFirstLast && pathNodes.length > 1) {
+          final firstNode = pathNodes.first;
+          final lastNode = pathNodes.last;
+
+          final circuitDistance =
+              _calculateDistance(firstNode.location, lastNode.location);
+
+          firstNode.connections[lastNode] = circuitDistance;
+          lastNode.connections[firstNode] = circuitDistance;
+        }
       }
 
-      // Connect first and last nodes
-      if (_graphNodes.length > 1) {
-        final firstNode = _graphNodes.first;
-        final lastNode = _graphNodes.last;
+      // Split nodes back into original paths
+      final rectanglePathNodes =
+          _graphNodes.sublist(0, rectangleFeatures.length);
+      final middlePathNodes = _graphNodes.sublist(rectangleFeatures.length);
 
-        final circuitDistance =
-            _calculateDistance(firstNode.location, lastNode.location);
+      // Connect nodes within each path
+      // Only connect first and last for rectangular path
+      connectNodesInPath(rectanglePathNodes, true);
+      connectNodesInPath(middlePathNodes, false);
 
-        // Bidirectional connection
-        firstNode.connections[lastNode] = circuitDistance;
-        lastNode.connections[firstNode] = circuitDistance;
-      }
-
-      print('Loaded ${_graphNodes.length} graph nodes');
+      // Optional: Add connections between paths if needed
+      _connectPathsIfNecessary(rectanglePathNodes, middlePathNodes);
     } catch (e) {
       print('Error loading pathway graph: $e');
+    }
+  }
+
+  // Optional method to connect paths if they are meant to intersect
+  void _connectPathsIfNecessary(List<GraphNode> path1, List<GraphNode> path2) {
+    // Find the closest points between the two paths and connect them
+    GraphNode? closestNodePath1;
+    GraphNode? closestNodePath2;
+    double minDistance = double.infinity;
+
+    for (var node1 in path1) {
+      for (var node2 in path2) {
+        final distance = _calculateDistance(node1.location, node2.location);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestNodePath1 = node1;
+          closestNodePath2 = node2;
+        }
+      }
+    }
+
+    // Connect the closest nodes if found
+    if (closestNodePath1 != null && closestNodePath2 != null) {
+      closestNodePath1.connections[closestNodePath2] = minDistance;
+      closestNodePath2.connections[closestNodePath1] = minDistance;
     }
   }
 
