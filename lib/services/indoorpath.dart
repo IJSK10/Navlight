@@ -67,6 +67,19 @@ class IndoorPathfinder {
         nextNode.connections[currentNode] = distance;
       }
 
+      // Connect first and last nodes
+      if (_graphNodes.length > 1) {
+        final firstNode = _graphNodes.first;
+        final lastNode = _graphNodes.last;
+
+        final circuitDistance =
+            _calculateDistance(firstNode.location, lastNode.location);
+
+        // Bidirectional connection
+        firstNode.connections[lastNode] = circuitDistance;
+        lastNode.connections[firstNode] = circuitDistance;
+      }
+
       print('Loaded ${_graphNodes.length} graph nodes');
     } catch (e) {
       print('Error loading pathway graph: $e');

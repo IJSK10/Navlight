@@ -68,6 +68,7 @@ flutter:
     - assets/rooms.geojson
     - assets/navlightwalk.geojson
     - assets/walkpoints.geojson
+    - assets/walkpoints1.geojson
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
