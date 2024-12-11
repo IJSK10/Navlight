@@ -133,7 +133,7 @@ class _MapScreenState extends State<HomeScreen1> {
       final geoJson = jsonDecode(geoJsonString);
 
       final features = geoJson['features'] as List;
-      print('Number of features: ${features.length}');
+      //print('Number of features: ${features.length}');
 
       // Initialize list and map
       List<String> names = [];
@@ -142,7 +142,7 @@ class _MapScreenState extends State<HomeScreen1> {
       // Iterate through features
       for (var feature in features) {
         if (feature['geometry']['type'] == 'Point') {
-          print("1");
+          //print("1");
           // Check if the feature is a point
           final coordinates = feature['geometry']['coordinates'] as List;
           final properties = feature['properties'];
@@ -156,13 +156,13 @@ class _MapScreenState extends State<HomeScreen1> {
           locationMap[name] = pointCoords;
         }
       }
-      print(names.length);
+      // print(names.length);
       setState(() {
         roomname = names;
         roomlocation = locationMap;
       });
-      print(roomname);
-      print(roomlocation);
+      //print(roomname);
+      //print(roomlocation);
     } catch (e) {
       print('Error loading GeoJSON: $e');
     }
@@ -293,6 +293,7 @@ class _MapScreenState extends State<HomeScreen1> {
       isNavigating = true;
       _currentRoutePoints = selectedRoute.polylines.first.points;
     });
+    print
 
     // Start location tracking with higher accuracy
     _locationSubscription = Geolocator.getPositionStream(
@@ -409,13 +410,13 @@ class _MapScreenState extends State<HomeScreen1> {
   void _updateCurrentLocationMarker() {
     markers.clear();
     if (currentLocation != null) {
-      markers.add(
-        Marker(
-          markerId: const MarkerId('currentLocation'),
-          position: currentLocation!,
-          infoWindow: const InfoWindow(title: 'You are here'),
-        ),
-      );
+      // markers.add(
+      //   Marker(
+      //     markerId: const MarkerId('currentLocation'),
+      //     position: currentLocation!,
+      //     infoWindow: const InfoWindow(title: 'You are here'),
+      //   ),
+      //);
     }
   }
 
@@ -453,7 +454,7 @@ class _MapScreenState extends State<HomeScreen1> {
   }
 
   Future<void> _handleSearch(String query) async {
-    print("Search query: $query");
+    //print("Search query: $query");
     if (query.isEmpty) {
       setState(() => suggestions = []);
       return;
