@@ -36,6 +36,8 @@ class _MapScreenState extends State<HomeScreen1> {
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
   Set<Polygon> polygons = {};
+  List<String> roomname = [];
+  Map<String, LatLng> roomlocation = {};
 
   LatLng? destinationLocation;
   LatLng? currentLocation;
@@ -77,6 +79,7 @@ class _MapScreenState extends State<HomeScreen1> {
     _initCompassListener();
     _initLocationOrientationTracking();
     _loadGeoJson();
+    _loadroomGeoJson();
   }
 
   Future<void> _loadGeoJson() async {
@@ -86,7 +89,7 @@ class _MapScreenState extends State<HomeScreen1> {
       final geoJson = jsonDecode(geoJsonString);
 
       final features = geoJson['features'] as List;
-      print((features.length));
+      //print((features.length));
 
       for (var feature in features) {
         if (feature['geometry']['type'] == 'MultiPolygon') {
@@ -103,8 +106,8 @@ class _MapScreenState extends State<HomeScreen1> {
             final newPolygon = Polygon(
                 polygonId: PolygonId(properties['id'].toString()),
                 points: polygonCoords,
-                fillColor: Colors.blue.withOpacity(0.2),
-                strokeColor: Colors.blue,
+                fillColor: Colors.black.withOpacity(0.2),
+                strokeColor: Colors.black,
                 strokeWidth: 2,
                 consumeTapEvents: true,
                 onTap: () {
@@ -117,6 +120,49 @@ class _MapScreenState extends State<HomeScreen1> {
           }
         }
       }
+    } catch (e) {
+      print('Error loading GeoJSON: $e');
+    }
+  }
+
+  Future<void> _loadroomGeoJson() async {
+    try {
+      // Load GeoJSON file
+      final String geoJsonString = await DefaultAssetBundle.of(context)
+          .loadString('assets/rooms.geojson');
+      final geoJson = jsonDecode(geoJsonString);
+
+      final features = geoJson['features'] as List;
+      print('Number of features: ${features.length}');
+
+      // Initialize list and map
+      List<String> names = [];
+      Map<String, LatLng> locationMap = {};
+
+      // Iterate through features
+      for (var feature in features) {
+        if (feature['geometry']['type'] == 'Point') {
+          print("1");
+          // Check if the feature is a point
+          final coordinates = feature['geometry']['coordinates'] as List;
+          final properties = feature['properties'];
+
+          // Extract name and coordinates
+          final name = properties['type'];
+          final LatLng pointCoords = LatLng(coordinates[1], coordinates[0]);
+
+          // Add to list and map
+          names.add(name);
+          locationMap[name] = pointCoords;
+        }
+      }
+      print(names.length);
+      setState(() {
+        roomname = names;
+        roomlocation = locationMap;
+      });
+      print(roomname);
+      print(roomlocation);
     } catch (e) {
       print('Error loading GeoJSON: $e');
     }
@@ -373,8 +419,9 @@ class _MapScreenState extends State<HomeScreen1> {
     }
   }
 
-  Future<void> _handlePlaceSelection(String placeId) async {
-    final place = await _placesService.getPlaceDetails(placeId);
+  Future<void> _handlePlaceSelection(
+      String placeId, Map<String, LatLng> roomlocation) async {
+    final place = await _placesService.getPlaceDetails(placeId, roomlocation);
     if (place != null) {
       setState(() {
         destinationLocation = place.location;
@@ -413,8 +460,7 @@ class _MapScreenState extends State<HomeScreen1> {
     }
 
     try {
-      final results = await _placesService.getPlaceSuggestions(query);
-      print("Got suggestions: $results");
+      final results = await _placesService.getPlaceSuggestions(query, roomname);
       setState(() {
         suggestions = results;
       });
@@ -543,7 +589,7 @@ class _MapScreenState extends State<HomeScreen1> {
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
             onTap: (position) => _placesService.getPlaceFromPoint(
-                position, _handlePlaceSelection),
+                position, _handlePlaceSelection, roomlocation),
           ),
           SafeArea(
             child: Padding(
@@ -556,6 +602,7 @@ class _MapScreenState extends State<HomeScreen1> {
                     onSuggestionSelected: _handlePlaceSelection,
                     recentSearches: recentSearches,
                     suggestions: suggestions,
+                    roomlocation: roomlocation,
                   ),
                   if (isRouteVisible &&
                       routeOptions.isNotEmpty &&

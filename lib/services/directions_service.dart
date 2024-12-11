@@ -1,24 +1,123 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart' as latlong;
 import 'package:dio/dio.dart';
 import '../models/directions.dart';
+import 'package:navlight/services/indoorpath.dart';
 
 class DirectionsService {
   final String apiKey = 'AIzaSyDIR8Xqw9wrMxKrUYELmblVmWiiHlOs3sM';
   final Dio _dio = Dio();
+  final List<LatLng> navlightCorners = const [
+    LatLng(40.913834438241999, -73.125762270213727),
+    LatLng(40.913313583257121, -73.125867512935272),
+    LatLng(40.913221575512978, -73.125068906401154),
+    LatLng(40.913748668990792, -73.124959536514041)
+  ];
 
-  /// Get directions for multiple travel modes
+  bool isPointInBuilding(LatLng point, List<LatLng> buildingCorners) {
+    int intersectCount = 0;
+
+    for (int i = 0; i < buildingCorners.length; i++) {
+      LatLng current = buildingCorners[i];
+      LatLng next = buildingCorners[(i + 1) % buildingCorners.length];
+
+      // Debugging output to inspect the edges and calculations
+      //print('Edge from $current to $next');
+      //print('Point: $point');
+      //print(
+      //'Latitude Check: ${(current.latitude <= point.latitude && point.latitude < next.latitude) || (next.latitude <= point.latitude && point.latitude < current.latitude)}');
+      if ((current.latitude <= point.latitude &&
+              point.latitude < next.latitude) ||
+          (next.latitude <= point.latitude &&
+              point.latitude < current.latitude)) {
+        double intersectionLongitude = (next.longitude - current.longitude) *
+                (point.latitude - current.latitude) /
+                (next.latitude - current.latitude) +
+            current.longitude;
+
+        // print('Intersection Longitude: $intersectionLongitude');
+        if (point.longitude < intersectionLongitude) {
+          intersectCount++;
+        }
+      }
+    }
+
+    //print('Intersect Count: $intersectCount');
+    return intersectCount % 2 == 1; // Odd means inside, even means outside
+  }
+
   Future<Map<String, Directions>> getDirections({
     required LatLng origin,
     required LatLng destination,
+    // List<LatLng>? buildingCorners, // Optional building corners for indoor check
   }) async {
-    // Define travel modes to retrieve
-    final modes = ['driving', 'walking'];
+    origin = const LatLng(
+      40.91369619883824,
+      -73.12566474820164,
+    );
+    // Check if both points are inside the building (if building corners provided)
+    bool ori = await isPointInBuilding(origin, navlightCorners);
+    bool dest = await isPointInBuilding(destination, navlightCorners);
+    final indoorPathfinder = IndoorPathfinder();
+    await indoorPathfinder.loadPathwayGraph();
+    Map<String, Directions> directionResults = {};
+    bool isIndoorNavigation = ori && dest;
+    if (isIndoorNavigation) {
+      try {
+        // Use indoor pathfinder for indoor navigation
+        final indoorDirections =
+            await indoorPathfinder.findShortestPath(origin, destination);
+        directionResults['walking'] = indoorDirections;
+        directionResults['driving'] = indoorDirections;
 
-    // Store results for different modes
+        return directionResults;
+      } catch (e) {
+        print('Indoor navigation error: $e');
+        // Fallback to Google Directions if indoor navigation fails
+        return await _fetchGoogleDirections(origin, destination);
+      }
+    } else {
+      // Use Google Directions for outdoor or mixed navigation
+      return await _fetchGoogleDirections(origin, destination);
+    }
+  }
+
+  String _estimateIndoorDuration(List<latlong.LatLng> path) {
+    // Assuming average walking speed indoors
+    const double walkingSpeedMps = 1.4; // meters per second
+    const latlong.Distance distanceCalculator = latlong.Distance();
+
+    double totalDistance = 0;
+    for (int i = 0; i < path.length - 1; i++) {
+      totalDistance += distanceCalculator.as(
+          latlong.LengthUnit.Kilometer, path[i], path[i + 1]);
+    }
+
+    int durationSeconds = ((totalDistance * 1000) / walkingSpeedMps).round();
+    int minutes = durationSeconds ~/ 60;
+    int seconds = durationSeconds % 60;
+
+    return '$minutes min $seconds sec';
+  }
+
+  String _calculateIndoorDistance(List<latlong.LatLng> path) {
+    const latlong.Distance distanceCalculator = latlong.Distance();
+    double totalDistance = 0;
+
+    for (int i = 0; i < path.length - 1; i++) {
+      totalDistance += distanceCalculator.as(
+          latlong.LengthUnit.Kilometer, path[i], path[i + 1]);
+    }
+
+    return '${(totalDistance * 1000).toStringAsFixed(0)} m';
+  }
+
+  Future<Map<String, Directions>> _fetchGoogleDirections(
+      LatLng origin, LatLng destination) async {
+    final modes = ['driving', 'walking'];
     Map<String, Directions> directionResults = {};
 
-    // Fetch directions for each mode
     for (String mode in modes) {
       final String url = 'https://maps.googleapis.com/maps/api/directions/json?'
           'origin=${origin.latitude},${origin.longitude}'

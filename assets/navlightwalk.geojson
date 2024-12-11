@@ -1,0 +1,144 @@
+{
+    "type": "FeatureCollection",
+    "name": "navlightwalk",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "id": 1,
+          "type": "walkpath",
+          "name": "walkpath"
+        },
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [
+                -73.12575473919156,
+                40.91376739905236
+              ],
+              [
+                -73.12498030943709,
+                40.91367263696637
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": 2,
+          "type": "walkpath",
+          "name": "walkpath2"
+        },
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [
+                -73.12565374274463,
+                40.91375490296089
+              ],
+              [
+                -73.12572040282683,
+                40.91339957993139
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": 3,
+          "type": "walkpath",
+          "name": "walkpath3"
+        },
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [
+                -73.12581928261098,
+                40.913414268593044
+              ],
+              [
+                -73.12506361345172,
+                40.913323120483284
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": 4,
+          "type": "walkpath",
+          "name": "walkpath5"
+        },
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [
+                -73.12536780849479,
+                40.91335987250406
+              ],
+              [
+                -73.12530463661368,
+                40.91371230794719
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": 5,
+          "type": "walkpath",
+          "name": "walkpath5"
+        },
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [
+                -73.12508404662871,
+                40.91368531790506
+              ],
+              [
+                -73.12514748930042,
+                40.913333074858244
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": 6,
+          "type": "walkpath",
+          "name": "entrance"
+        },
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [
+                -73.12523485043104,
+                40.91334415025503
+              ],
+              [
+                -73.12525199331272,
+                40.9132725744372
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }

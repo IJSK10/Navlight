@@ -95,42 +95,45 @@ class PlaceDetailsSheet extends StatelessWidget {
               ),
             const SizedBox(height: 16),
             // Action buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    onGetDirections();
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.directions),
-                  label: const Text('Directions'),
-                ),
-                if (place.website != null)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
                   ElevatedButton.icon(
-                    onPressed: () async {
-                      if (await canLaunchUrl(Uri.parse(place.website!))) {
-                        await launchUrl(
-                          Uri.parse(place.website!),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      }
+                    onPressed: () {
+                      onGetDirections();
+                      Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.language),
-                    label: const Text('Website'),
+                    icon: const Icon(Icons.directions),
+                    label: const Text('Directions'),
                   ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    final text = '${place.name}\n'
-                        '${place.address}\n'
-                        'Rating: ${place.rating ?? 'N/A'}\n'
-                        '${place.website ?? ''}';
-                    Share.share(text);
-                  },
-                  icon: const Icon(Icons.share),
-                  label: const Text('Share'),
-                ),
-              ],
+                  if (place.website != null)
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        if (await canLaunchUrl(Uri.parse(place.website!))) {
+                          await launchUrl(
+                            Uri.parse(place.website!),
+                            mode: LaunchMode.externalApplication,
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.language),
+                      label: const Text('Website'),
+                    ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final text = '${place.name}\n'
+                          '${place.address}\n'
+                          'Rating: ${place.rating ?? 'N/A'}\n'
+                          '${place.website ?? ''}';
+                      Share.share(text);
+                    },
+                    icon: const Icon(Icons.share),
+                    label: const Text('Share'),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

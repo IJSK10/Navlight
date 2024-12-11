@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class SearchBarWidget extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onSearch;
-  final Function(String) onSuggestionSelected;
+  final Function(String, Map<String, LatLng>) onSuggestionSelected;
   final List<String> recentSearches;
   final List<dynamic> suggestions;
+  final Map<String, LatLng> roomlocation;
 
   const SearchBarWidget({
     super.key,
@@ -14,6 +16,7 @@ class SearchBarWidget extends StatelessWidget {
     required this.onSuggestionSelected,
     required this.recentSearches,
     required this.suggestions,
+    required this.roomlocation,
   });
 
   @override
@@ -123,7 +126,10 @@ class SearchBarWidget extends StatelessWidget {
                       onTap: () {
                         controller.clear();
                         onSearch('');
-                        onSuggestionSelected(suggestion['place_id']);
+                        onSuggestionSelected(
+                          suggestion['place_id'],
+                          roomlocation,
+                        );
                       },
                     ),
                   ),

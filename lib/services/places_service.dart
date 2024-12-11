@@ -6,7 +6,30 @@ class PlacesService {
   final String apiKey = 'AIzaSyDIR8Xqw9wrMxKrUYELmblVmWiiHlOs3sM';
   final Dio _dio = Dio();
 
-  Future<Place?> getPlaceDetails(String placeId) async {
+  Future<Place?> getPlaceDetails(
+      String placeId, Map<String, LatLng> roomlocation) async {
+    if (placeId.startsWith('custom_')) {
+      final roomName = placeId.replaceFirst('custom_', '');
+
+      final LatLng? coordinates = roomlocation[roomName];
+      print("roomname");
+      print(roomName);
+      print(coordinates);
+      if (coordinates != null) {
+        return Place(
+          id: placeId,
+          name: roomName,
+          address: 'Custom Location',
+          rating: null,
+          phoneNumber: null,
+          website: null,
+          openingHours: null,
+          location: coordinates,
+        );
+      }
+
+      return null;
+    }
     final String url =
         'https://maps.googleapis.com/maps/api/place/details/json?'
         'place_id=$placeId'
@@ -35,7 +58,8 @@ class PlacesService {
     return null;
   }
 
-  Future<List<Map<String, dynamic>>> getPlaceSuggestions(String query) async {
+  Future<List<Map<String, dynamic>>> getPlaceSuggestions(
+      String query, List<String> roomname) async {
     if (query.isEmpty) return [];
     //print(query);
     final String url =
@@ -44,8 +68,17 @@ class PlacesService {
 
     try {
       final response = await _dio.get(url);
-      //print(response);
-      return List<Map<String, dynamic>>.from(response.data['predictions']);
+      List<Map<String, dynamic>> predictions =
+          List<Map<String, dynamic>>.from(response.data['predictions']);
+      final matchingRooms = roomname
+          .where((room) => room.toLowerCase().startsWith(query.toLowerCase()))
+          .map((room) => {
+                'description': room,
+                'place_id': 'custom_$room' // Custom ID for local entries
+              })
+          .toList();
+      predictions.insertAll(0, matchingRooms);
+      return predictions;
     } catch (e) {
       print('Error fetching suggestions: $e');
       return [];
@@ -53,7 +86,9 @@ class PlacesService {
   }
 
   Future<void> getPlaceFromPoint(
-      LatLng location, Function(String) placeselect) async {
+      LatLng location,
+      Function(String, Map<String, LatLng>) placeselect,
+      Map<String, LatLng> roomlocation) async {
     print(location);
     final String url =
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
@@ -66,8 +101,8 @@ class PlacesService {
           response.data['results'].isNotEmpty) {
         final place = response.data['results'][0];
         print(place);
-        await getPlaceDetails(place['place_id']);
-        placeselect(place['place_id']);
+        await getPlaceDetails(place['place_id'], roomlocation);
+        placeselect(place['place_id'], roomlocation);
       }
     } catch (e) {
       print('Error fetching place from point: $e');
