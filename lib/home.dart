@@ -389,7 +389,7 @@ class _MapScreenState extends State<HomeScreen1> {
     });
 
     // Check if destination is reached
-    if (remainingDistance < 2) {
+    if (remainingDistance < 5) {
       _endNavigation();
     }
   }
