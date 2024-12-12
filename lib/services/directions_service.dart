@@ -22,11 +22,6 @@ class DirectionsService {
       LatLng current = buildingCorners[i];
       LatLng next = buildingCorners[(i + 1) % buildingCorners.length];
 
-      // Debugging output to inspect the edges and calculations
-      //print('Edge from $current to $next');
-      //print('Point: $point');
-      //print(
-      //'Latitude Check: ${(current.latitude <= point.latitude && point.latitude < next.latitude) || (next.latitude <= point.latitude && point.latitude < current.latitude)}');
       if ((current.latitude <= point.latitude &&
               point.latitude < next.latitude) ||
           (next.latitude <= point.latitude &&
@@ -36,27 +31,24 @@ class DirectionsService {
                 (next.latitude - current.latitude) +
             current.longitude;
 
-        // print('Intersection Longitude: $intersectionLongitude');
         if (point.longitude < intersectionLongitude) {
           intersectCount++;
         }
       }
     }
 
-    //print('Intersect Count: $intersectCount');
-    return intersectCount % 2 == 1; // Odd means inside, even means outside
+    return intersectCount % 2 == 1;
   }
 
   Future<Map<String, Directions>> getDirections({
     required LatLng origin,
     required LatLng destination,
-    // List<LatLng>? buildingCorners, // Optional building corners for indoor check
   }) async {
-    origin = const LatLng(
-      40.91369619883824,
-      -73.12566474820164,
-    );
-    // Check if both points are inside the building (if building corners provided)
+    // origin = const LatLng(
+    //   40.91369619883824,
+    //   -73.12566474820164,
+    // );
+
     bool ori = await isPointInBuilding(origin, navlightCorners);
     bool dest = await isPointInBuilding(destination, navlightCorners);
     final indoorPathfinder = IndoorPathfinder();
@@ -65,7 +57,6 @@ class DirectionsService {
     bool isIndoorNavigation = ori && dest;
     if (isIndoorNavigation) {
       try {
-        // Use indoor pathfinder for indoor navigation
         final indoorDirections =
             await indoorPathfinder.findShortestPath(origin, destination);
         directionResults['walking'] = indoorDirections;
@@ -74,18 +65,15 @@ class DirectionsService {
         return directionResults;
       } catch (e) {
         print('Indoor navigation error: $e');
-        // Fallback to Google Directions if indoor navigation fails
         return await _fetchGoogleDirections(origin, destination);
       }
     } else {
-      // Use Google Directions for outdoor or mixed navigation
       return await _fetchGoogleDirections(origin, destination);
     }
   }
 
   String _estimateIndoorDuration(List<latlong.LatLng> path) {
-    // Assuming average walking speed indoors
-    const double walkingSpeedMps = 1.4; // meters per second
+    const double walkingSpeedMps = 1.4;
     const latlong.Distance distanceCalculator = latlong.Distance();
 
     double totalDistance = 0;
@@ -156,7 +144,6 @@ class DirectionsService {
     return directionResults;
   }
 
-  /// Choose color based on travel mode
   Color _getColorForMode(String mode) {
     switch (mode) {
       case 'driving':

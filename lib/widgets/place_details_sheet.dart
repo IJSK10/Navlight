@@ -40,7 +40,6 @@ class PlaceDetailsSheet extends StatelessWidget {
                 ),
               ),
             ),
-            // Place name
             Text(
               place.name,
               style: const TextStyle(
@@ -49,7 +48,6 @@ class PlaceDetailsSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            // Rating
             if (place.rating != null)
               Row(
                 children: [
@@ -61,13 +59,11 @@ class PlaceDetailsSheet extends StatelessWidget {
                 ],
               ),
             const SizedBox(height: 8),
-            // Address
             Text(
               place.address,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
-            // Phone number
             if (place.phoneNumber != null)
               ListTile(
                 leading: const Icon(Icons.phone),
@@ -79,7 +75,6 @@ class PlaceDetailsSheet extends StatelessWidget {
                   }
                 },
               ),
-            // Opening hours
             if (place.openingHours != null && place.openingHours!.isNotEmpty)
               ExpansionTile(
                 leading: const Icon(Icons.access_time),
@@ -94,7 +89,6 @@ class PlaceDetailsSheet extends StatelessWidget {
                 ],
               ),
             const SizedBox(height: 16),
-            // Action buttons
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(

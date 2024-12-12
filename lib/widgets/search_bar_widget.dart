@@ -21,12 +21,6 @@ class SearchBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Debug prints
-    // print("debigs");
-    // print('Current suggestions: $suggestions');
-    // print('Recent searches: $recentSearches');
-    // print('Search text: ${controller.text}');
-
     return Column(
       children: [
         Container(
@@ -107,7 +101,6 @@ class SearchBarWidget extends StatelessWidget {
                     ),
                   ),
                 ],
-                // Suggestions section
                 if (suggestions.isNotEmpty) ...[
                   const Padding(
                     padding: EdgeInsets.all(12),

@@ -37,9 +37,9 @@ class NavigationGuidanceWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
+              const Expanded(
                 child: Text(
-                  currentInstruction,
+                  "Navigationg to desired location",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -58,11 +58,11 @@ class NavigationGuidanceWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Distance: $remainingDistance',
+                'Total Distance: $remainingDistance',
                 style: const TextStyle(color: Colors.grey),
               ),
               Text(
-                'ETA: $remainingDuration',
+                'Total ETA: $remainingDuration',
                 style: const TextStyle(color: Colors.grey),
               ),
             ],

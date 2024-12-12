@@ -33,29 +33,23 @@ class IndoorPathfinder {
     return earthRadius * c;
   }
 
-  // Load and create graph from GeoJSON
   Future<void> loadPathwayGraph() async {
     _graphNodes.clear();
 
     try {
-      // Load the rectangular path points
       final rectangleJsonString =
           await rootBundle.loadString("assets/walkpoints.geojson");
       final rectangleJsonData = json.decode(rectangleJsonString);
 
-      // Load the middle path points
       final middlePathJsonString =
           await rootBundle.loadString("assets/walkpoints1.geojson");
       final middlePathJsonData = json.decode(middlePathJsonString);
 
-      // Parse and create graph nodes for both paths
       final rectangleFeatures = rectangleJsonData['features'] as List;
       final middlePathFeatures = middlePathJsonData['features'] as List;
 
-      // Combine features from both paths
       final allFeatures = [...rectangleFeatures, ...middlePathFeatures];
 
-      // Create nodes for all features
       for (var feature in allFeatures) {
         final coords = feature['geometry']['coordinates'][0];
         final node = GraphNode(
@@ -64,7 +58,6 @@ class IndoorPathfinder {
         _graphNodes.add(node);
       }
 
-      // Connect nodes within each original path
       void connectNodesInPath(
           List<GraphNode> pathNodes, bool connectFirstLast) {
         for (int i = 0; i < pathNodes.length - 1; i++) {
@@ -74,12 +67,10 @@ class IndoorPathfinder {
           final distance =
               _calculateDistance(currentNode.location, nextNode.location);
 
-          // Bidirectional connection
           currentNode.connections[nextNode] = distance;
           nextNode.connections[currentNode] = distance;
         }
 
-        // Only connect first and last for rectangular path
         if (connectFirstLast && pathNodes.length > 1) {
           final firstNode = pathNodes.first;
           final lastNode = pathNodes.last;
@@ -92,26 +83,20 @@ class IndoorPathfinder {
         }
       }
 
-      // Split nodes back into original paths
       final rectanglePathNodes =
           _graphNodes.sublist(0, rectangleFeatures.length);
       final middlePathNodes = _graphNodes.sublist(rectangleFeatures.length);
 
-      // Connect nodes within each path
-      // Only connect first and last for rectangular path
       connectNodesInPath(rectanglePathNodes, true);
       connectNodesInPath(middlePathNodes, false);
 
-      // Optional: Add connections between paths if needed
       _connectPathsIfNecessary(rectanglePathNodes, middlePathNodes);
     } catch (e) {
       print('Error loading pathway graph: $e');
     }
   }
 
-  // Optional method to connect paths if they are meant to intersect
   void _connectPathsIfNecessary(List<GraphNode> path1, List<GraphNode> path2) {
-    // Find the closest points between the two paths and connect them
     GraphNode? closestNodePath1;
     GraphNode? closestNodePath2;
     double minDistance = double.infinity;
@@ -127,14 +112,12 @@ class IndoorPathfinder {
       }
     }
 
-    // Connect the closest nodes if found
     if (closestNodePath1 != null && closestNodePath2 != null) {
       closestNodePath1.connections[closestNodePath2] = minDistance;
       closestNodePath2.connections[closestNodePath1] = minDistance;
     }
   }
 
-  // Find the nearest graph node to a given point
   GraphNode? findNearestNode(LatLng point, {double maxDistance = 50}) {
     GraphNode? nearest;
     double minDistance = double.infinity;
@@ -150,9 +133,7 @@ class IndoorPathfinder {
     return nearest;
   }
 
-  // Dijkstra's shortest path algorithm
   List<GraphNode> _dijkstraShortestPath(GraphNode start, GraphNode end) {
-    // Reset tracking
     final distances = <GraphNode, double>{};
     final previousNodes = <GraphNode, GraphNode?>{};
     final unvisitedNodes = <GraphNode>{};
@@ -166,16 +147,13 @@ class IndoorPathfinder {
     distances[start] = 0;
 
     while (unvisitedNodes.isNotEmpty) {
-      // Find node with minimum distance
       final currentNode = unvisitedNodes
           .reduce((a, b) => distances[a]! < distances[b]! ? a : b);
 
       unvisitedNodes.remove(currentNode);
 
-      // Reached destination
       if (currentNode == end) break;
 
-      // Check connections
       for (var entry in currentNode.connections.entries) {
         final neighborNode = entry.key;
         final distance = entry.value;
@@ -191,7 +169,6 @@ class IndoorPathfinder {
       }
     }
 
-    // Reconstruct path
     final path = <GraphNode>[];
     GraphNode? current = end;
     while (current != null) {
@@ -202,14 +179,10 @@ class IndoorPathfinder {
     return path;
   }
 
-  // Find shortest path between two points
   Future<Directions> findShortestPath(LatLng origin, LatLng destination) async {
-    // Ensure graph is loaded
     if (_graphNodes.isEmpty) {
       await loadPathwayGraph();
     }
-
-    // Find nearest nodes
     final originNode = findNearestNode(origin);
     final destNode = findNearestNode(destination);
 
@@ -218,17 +191,14 @@ class IndoorPathfinder {
       return Directions.empty();
     }
 
-    // Find shortest path
     final pathNodes = _dijkstraShortestPath(originNode, destNode);
 
-    // Create polyline for the path
     final List<LatLng> pathPoints = [
       origin,
       ...pathNodes.map((node) => node.location),
       destination
     ];
 
-    // Calculate total distance
     double totalDistance = 0;
     for (int i = 0; i < pathPoints.length - 1; i++) {
       totalDistance += _calculateDistance(pathPoints[i], pathPoints[i + 1]);
@@ -249,7 +219,6 @@ class IndoorPathfinder {
     );
   }
 
-  // Calculate bounds for the path
   LatLngBounds _calculateBounds(List<LatLng> points) {
     double minLat = points.map((p) => p.latitude).reduce(min);
     double maxLat = points.map((p) => p.latitude).reduce(max);
@@ -262,6 +231,5 @@ class IndoorPathfinder {
     );
   }
 
-  // Getter for graph nodes
   List<GraphNode> get graphNodes => _graphNodes;
 }

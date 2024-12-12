@@ -4,13 +4,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class NavigationService {
-  // Calculate distance between two points
   static double calculateDistance(LatLng point1, LatLng point2) {
     return Geolocator.distanceBetween(
         point1.latitude, point1.longitude, point2.latitude, point2.longitude);
   }
 
-  // Find the closest point on the route
   static LatLng findClosestPointOnRoute(
       LatLng currentLocation, List<LatLng> routePoints) {
     return routePoints.reduce((closest, point) =>
@@ -20,7 +18,6 @@ class NavigationService {
             : closest);
   }
 
-  // Determine the next waypoint
   static LatLng findNextWaypoint(
       LatLng currentLocation, List<LatLng> routePoints) {
     int currentIndex = routePoints.indexWhere((point) =>
@@ -31,7 +28,6 @@ class NavigationService {
         : routePoints.last;
   }
 
-  // Calculate bearing between two points
   static double calculateBearing(LatLng point1, LatLng point2) {
     double lat1 = point1.latitude * pi / 180;
     double lon1 = point1.longitude * pi / 180;
@@ -47,7 +43,6 @@ class NavigationService {
     return (brng * 180 / pi + 360) % 360;
   }
 
-  // Generate turn instructions
   static String generateTurnInstruction(
       LatLng currentLocation, LatLng nextWaypoint, double currentBearing) {
     double bearingToNextPoint = calculateBearing(currentLocation, nextWaypoint);
@@ -72,7 +67,6 @@ class NavigationService {
     }
   }
 
-  // Calculate remaining distance
   static String formatRemainingDistance(double distanceInMeters) {
     if (distanceInMeters < 1000) {
       return '${distanceInMeters.round()} m';

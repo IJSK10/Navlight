@@ -12,9 +12,6 @@ class PlacesService {
       final roomName = placeId.replaceFirst('custom_', '');
 
       final LatLng? coordinates = roomlocation[roomName];
-      print("roomname");
-      print(roomName);
-      print(coordinates);
       if (coordinates != null) {
         return Place(
           id: placeId,
@@ -61,7 +58,6 @@ class PlacesService {
   Future<List<Map<String, dynamic>>> getPlaceSuggestions(
       String query, List<String> roomname) async {
     if (query.isEmpty) return [];
-    //print(query);
     final String url =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?'
         'input=$query&key=$apiKey';

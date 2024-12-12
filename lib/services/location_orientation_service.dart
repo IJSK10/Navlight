@@ -27,13 +27,11 @@ class LocationOrientationService {
   }
 
   void _initSensorListeners() {
-    // Compass listener
     _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
       _compassHeading = event.heading ?? 0.0;
       _emitLocationData();
     });
 
-    // Accelerometer listener
     _accelerometerSubscription =
         accelerometerEvents.listen((AccelerometerEvent event) {
       _accelerometerX = event.x;
@@ -42,11 +40,10 @@ class LocationOrientationService {
       _emitLocationData();
     });
 
-    // Position listener with high accuracy
     _positionSubscription = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.bestForNavigation,
-        distanceFilter: 5, // Update every 5 meters
+        distanceFilter: 5,
       ),
     ).listen((Position position) {
       _lastPosition = position;
@@ -72,12 +69,10 @@ class LocationOrientationService {
   }
 
   double calculateDeviceMovementDirection() {
-    // Calculate movement direction based on accelerometer data
     double magnitude = sqrt(pow(_accelerometerX, 2) +
         pow(_accelerometerY, 2) +
         pow(_accelerometerZ, 2));
 
-    // Use atan2 to get direction
     double direction = atan2(_accelerometerY, _accelerometerX);
 
     return direction;
